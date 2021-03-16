@@ -73,6 +73,7 @@ public class AirlineManagementSystem {
 		
 
 	}
+	
 
 	private boolean isAirlineCodenameValid(String airlineCodename) {
 
@@ -108,4 +109,14 @@ public class AirlineManagementSystem {
 	public void removeAirlineFromDatabase(Airline airline) {
 		airlinedb.deleteContentFromDatabase(airline.getAirlineCodename());
 	}
+	
+	public int getAirlineIdFromAirline (Airline airline) {
+		return airlinedb.getAirlineIdFromAirline(airline);
+	}
+	
+	public Airline getAirlineFromAirlineID (int airline_id) {
+		return airlinedb.getAirlineFromAirlineId(airline_id);
+	}
+	
+	
 }

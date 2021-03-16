@@ -7,16 +7,16 @@ import java.util.Calendar;
 
 import management.AirlineManagementSystem;
 import management.AirportManagementSystem;
-
+import models.Airport;
 import models.Flight;
 
 public class FlightDatabase {
 
 	private static String statementToStoreDataIntoFlights = "INSERT INTO flights"
-			+ "(flight_ID, airline_codename, airport_codename, destination_airport, flight_class, date_of_flight, seat_row, seat_number, flight_price) values "
+			+ "(flight_ID, airline, departure_airport, destination_airport, flight_class, date_of_flight, seat_row, seat_number, flight_price) values "
 			+ " (?,?,?,?,?,?,?,?,?);";
 	private static String statementToDisplayDataOfFlights = "SELECT * FROM flights";
-	private static String statementToUpdateFlightsData = "UPDATE flights set airline_codename= ?, airport_codename= ?, destination_airport = ?, flight_class = ?, "
+	private static String statementToUpdateFlightsData = "UPDATE flights set airline= ?, departure_airport= ?, destination_airport = ?, flight_class = ?, "
 			+ "date_of_flight = ?, seat_row = ?, seat_number = ?, flight_price= ? where flight_ID= ?";
 	private static String statementToDeleteDataFromFlights = "DELETE from flights where flight_ID=?";
 	final String STATEMENT_IF_CODENAME_IS_NULL = "NOT AVAILABLE";
@@ -26,16 +26,16 @@ public class FlightDatabase {
 	public void storeToDatabase(Flight flight) {
 
 		try {
-
+			
 			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
 			Connection conn = dbConnection.getConnection();
 			PreparedStatement preparedStmt = conn.prepareStatement(statementToStoreDataIntoFlights);
 
 			preparedStmt.setInt(1, flight.getFlight_id()); // Flight_ID Column
-			preparedStmt.setString(2, flight.getAirline().getAirlineCodename()); // AirlineCodename Column
-			preparedStmt.setString(3, flight.getAirport().getAirportCodename()); // AirportCodename Column
-			preparedStmt.setString(4, flight.getDestinationAirport().getAirportCodename()); // Destination Airport
-																							// Column
+			preparedStmt.setInt(2, airlinems.getAirlineIdFromAirline(flight.getAirline())); // AirlineCodename Column
+			preparedStmt.setInt(3, airportms.getAirportIdFromAirport(flight.getAirport())); // AirportCodename Column
+			preparedStmt.setInt(4, airportms.getAirportIdFromAirport(flight.getDestinationAirport())); // Destination Airport
+																							
 			preparedStmt.setString(5, flight.getFlightClass()); // Flight_Class Column
 			preparedStmt.setTimestamp(6, flight.getDateOfFlightInDateTime(flight.getDateOfFlight())); // Date_OF_Flight
 																										// Column
@@ -102,14 +102,14 @@ public class FlightDatabase {
 				Timestamp timestamp = rset.getTimestamp("date_of_flight");
 				cal.setTime(timestamp);
 
-				if (airlinems.getAirlineFromCodename(rset.getString("airline_codename")) != null
-						&& airportms.getAirportFromCodename(rset.getString("airport_codename")) != null
-						&& airportms.getAirportFromCodename(rset.getString("destination_airport")) != null) {
+				if (airlinems.getAirlineFromAirlineID(rset.getInt("airline")) != null
+						&& airportms.getAirportFromAirportId(rset.getInt("departure_airport")) != null
+						&& airportms.getAirportFromAirportId(rset.getInt("destination_airport")) != null) {
 
 					Flight flight = new Flight(rset.getInt("flight_ID"),
-							airlinems.getAirlineFromCodename(rset.getString("airline_codename")),
-							airportms.getAirportFromCodename(rset.getString("airport_codename")),
-							airportms.getAirportFromCodename(rset.getString("destination_airport")),
+							airlinems.getAirlineFromAirlineID(rset.getInt("airline")),
+							airportms.getAirportFromAirportId(rset.getInt("departure_airport")),
+							airportms.getAirportFromAirportId(rset.getInt("destination_airport")),
 							rset.getString("flight_class"), cal, rset.getString("seat_row").charAt(0),
 							rset.getInt("seat_number"), rset.getDouble("flight_price"));
 
@@ -130,7 +130,7 @@ public class FlightDatabase {
 		return flights;
 	}
 
-	public void updateDatabaseContent(int FlightID, String AirlineCodename, String Airport_Codename,
+	public void updateDatabaseContent(int FlightID, String airline, String departureAirport,
 			String destinationAirport, String Flightclass, Calendar Date_of_flight, char seatRow, int seatNumber,
 			double flight_Price) {
 
@@ -142,9 +142,9 @@ public class FlightDatabase {
 			Connection conn = dbConnection.getConnection();
 			PreparedStatement preparedStmt = conn.prepareStatement(statementToUpdateFlightsData);
 
-			preparedStmt.setString(1, AirlineCodename); // update Airline_Codename column
-			preparedStmt.setString(2, Airport_Codename); // update Airport_Codename column
-			preparedStmt.setString(3, destinationAirport); // update Destination_Airport column
+			preparedStmt.setInt(1, airlinems.getAirlineIdFromAirline(airlinems.getAirlineFromCodename(airline))); // update Airline_Codename column
+			preparedStmt.setInt(2, airportms.getAirportIdFromAirport(airportms.getAirportFromCodename(departureAirport))); // update Airport_Codename column
+			preparedStmt.setInt(3, airportms.getAirportIdFromAirport(airportms.getAirportFromCodename(destinationAirport))); // update Destination_Airport column
 			preparedStmt.setString(4, Flightclass); // update Flight_class column
 			preparedStmt.setTimestamp(5, timestamp); //
 			preparedStmt.setString(6, String.valueOf(seatRow)); // update seatRow column
@@ -185,5 +185,7 @@ public class FlightDatabase {
 		}
 
 	}
+	
+
 
 }

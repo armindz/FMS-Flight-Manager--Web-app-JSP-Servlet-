@@ -51,6 +51,8 @@
                 </div>
             </div>
 
+			 <a id="settingsButton" href="../settings.jsp"> <img  src="../img/icons/settingsIcon.ico"></a>
+			 
             <form class="logoutButton" action="LogoutServlet" method="GET">
                 <button class="logoutbtn">Log out!</button>
             </form>
@@ -63,8 +65,10 @@
 
 
 	<h3 id="airportlist">Airport list</h3>
+	<div class="managementFunctions">
+	<a id="createAirportBtn" href="../form/airportForm.html">ADD AIRPORT</a>
 	<%!AirportManagementSystem airportms = new AirportManagementSystem();%>
-
+	</div>
 	<table class="airportListTable" style="width: 100%">
 		<tr>
 
@@ -100,13 +104,13 @@
 					name="removeid">
 					<input type="hidden" name="product_id"
 						value="<%=fetchDataToList.get(i).getAirportCodename()%>" /> <input
-						type="submit" name="remove" value="Remove" />
+						type="submit" name="remove" value="Delete" />
 				</form>
 				<form id="update" action="../AirportUpdateServlet" method="GET"
 					name="updateid">
 					<input type="hidden" name="product_id"
 						value="<%=fetchDataToList.get(i).getAirportCodename()%>" /> <input
-						type="submit" name="update" value="Update" />
+						type="submit" name="update" value="Edit" />
 				</form>
 				<form id="viewAirport" action="../AirportPreviewServlet" method="GET"
 					name="viewAirportId">

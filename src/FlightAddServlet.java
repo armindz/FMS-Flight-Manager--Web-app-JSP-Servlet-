@@ -58,10 +58,10 @@ public class FlightAddServlet extends HttpServlet {
 		System.out.println("Date" + date);
 		System.out.println("Datetime Local" + request.getParameter("dateOfFlight"));
 
-		String airlineCodename = request.getParameter("airlineCodename");
-		String airportCodename = request.getParameter("airportCodename");
-		String destinationAirportCodename = request.getParameter("destinationAirportCodename");
-		String flightClass = request.getParameter("flightClass");
+		String airlineCodename = request.getParameter("airlineCodename").toUpperCase();
+		String airportCodename = request.getParameter("airportCodename").toUpperCase();
+		String destinationAirportCodename = request.getParameter("destinationAirportCodename").toUpperCase();
+		String flightClass = request.getParameter("flightClass").toUpperCase();
 		char seatRow = (request.getParameter("seatRow").charAt(0));
 		int seatNumber = Integer.parseInt(request.getParameter("seatNumber"));
 		double flightPrice = Double.parseDouble(request.getParameter("flightPrice"));

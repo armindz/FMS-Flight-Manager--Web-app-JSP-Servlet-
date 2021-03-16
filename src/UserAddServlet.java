@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import management.UserManagementSystem;
 
 
-@WebServlet("/UserAddServlet")
+@WebServlet(name = "/UserAddServlet", urlPatterns = {"/user-add"})
 public class UserAddServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

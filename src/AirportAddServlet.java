@@ -45,11 +45,11 @@ public class AirportAddServlet extends HttpServlet {
 	private void createAirport(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
 
-		String airportCodename = request.getParameter("airportCodename");
-		String airportFullname = request.getParameter("airportFullname");
-		String airportType = request.getParameter("airportType");
-		String airportCity = request.getParameter("airportCity");
-		String airportCountry = request.getParameter("airportCountry");
+		String airportCodename = request.getParameter("airportCodename").toUpperCase();
+		String airportFullname = request.getParameter("airportFullname").toUpperCase();
+		String airportType = request.getParameter("airportType").toUpperCase();
+		String airportCity = request.getParameter("airportCity").toUpperCase();
+		String airportCountry = request.getParameter("airportCountry").toUpperCase();
 		AirportManagementSystem airportms = new AirportManagementSystem();
 
 		airportms.createAirport(airportCodename, airportFullname, airportType, airportCity, airportCountry);

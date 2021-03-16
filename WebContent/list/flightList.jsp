@@ -52,6 +52,8 @@
                 </div>
             </div>
 
+             <a id="settingsButton" href="../settings.jsp"> <img  src="../img/icons/settingsIcon.ico"></a>
+             
             <form class="logoutButton" action="../LogoutServlet" method="GET">
                 <button class="logoutbtn">Log out!</button>
             </form>
@@ -59,13 +61,17 @@
     </header>
 
                         <h3 id="flightlist">Flight list </h3>
+                        
+                        <div class="managementFunctions">
+                        <a id="createFlightBtn" href="../form/flightForm.jsp">ADD FLIGHT</a>
+                        </div>
                         <%! FlightManagementSystem flightms = new FlightManagementSystem(); %>
                             <%! FlightDatabase flightdb = new FlightDatabase(); %>
 
                                 <table class="flightListTable" style="width:100%">
                                     <tr>
                                         <th>Airline</th>
-                                        <th>Airport</th>
+                                        <th>Departure Airport</th>
                                         <th>Destination Airport</th>
                                         <th>Flight class</th>
                                         <th>Date of flight</th>
@@ -138,11 +144,11 @@
                                             <div class="tablefunctions">
                                                 <form id="remove" action="../FlightRemoveServlet" method="GET" name="removeid">
                                                     <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlight_id()%>" />
-                                                    <input type="submit" name="remove" value="Remove" />
+                                                    <input type="submit" name="remove" value="Delete" />
 													</form>
                                                     <form id="update" action="../FlightUpdateServlet" method="GET" name="updateid">
                                                         <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlight_id()%>" />
-                                                        <input type="submit" name="update" value="Update" />
+                                                        <input type="submit" name="update" value="Edit" />
 														</form>
                                                         <form id="viewFlight" action="../BookAFlight" method="GET" name="viewFlight">
                                                             <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlight_id()%>" />

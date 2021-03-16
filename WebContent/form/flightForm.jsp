@@ -54,6 +54,8 @@
                 </div>
             </div>
 
+            <a id="settingsButton" href="../settings.jsp"> <img id="settingsButton" src="../img/icons/settingsIcon.ico"></a>
+
             <form class="logoutButton" action="../LogoutServlet" method="GET">
                 <button class="logoutbtn">Log out!</button>
             </form>

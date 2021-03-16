@@ -41,8 +41,9 @@ public class FlightManagementSystem {
 		if (isFlightDataValid(flight, flight.getSeatRow(), flight.getAirline().getAirlineCodename(),
 				flight.getAirport().getAirportCodename(), flight.getDestinationAirport().getAirportCodename())) {
 
-			createSeatsAndStoreToDatabase(flight, flight.getSeatRow(), flight.getSeatNumber());
 			addFlightToDatabase(flight);
+			createSeatsAndStoreToDatabase(flight, flight.getSeatRow(), flight.getSeatNumber());
+			
 
 			System.out.println("Flight successfully created!");
 		} else {
@@ -225,6 +226,8 @@ public class FlightManagementSystem {
 		}
 		return 0;
 	}
+	
+	
 
 	public ArrayList<Flight> getListOfFlights() {
 
@@ -274,4 +277,5 @@ public class FlightManagementSystem {
 
 		seatdb.storeToDatabase(seat);
 	}
+	
 }

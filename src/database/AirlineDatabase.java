@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 
 import models.Airline;
+import models.Airport;
 
 public class AirlineDatabase {
 
@@ -15,7 +16,9 @@ public class AirlineDatabase {
 	private static String statementToDisplayDataOfAirlines = "SELECT * FROM airlines";
 	private static String statementToUpdateAirlinesData = "UPDATE airlines set airline_callsign= ?, airline_country = ? where  airline_codename= ? ";
 	private static String statementToDeleteDataFromAirlines = "DELETE from airlines where airline_codename=?";
-
+	private static String statementToGetIdFromAirlineData = "SELECT airline_id FROM airlines where airline_codename= ? and airline_callsign= ? and airline_country= ?";
+	private static String statementToDisplayAirlineFromAirlineId = "SELECT * FROM airlines WHERE airline_id=?";
+	
 	public void storeToDatabase(Airline airline) throws SQLException {
 
 		try {
@@ -129,5 +132,65 @@ public class AirlineDatabase {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public int getAirlineIdFromAirline(Airline airline) {
+		
+		int airlineID = 0;
+		try {
+			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+			Connection conn = dbConnection.getConnection();
+			PreparedStatement preparedStmt = conn.prepareStatement(statementToGetIdFromAirlineData);
+			
+			
+			preparedStmt.setString(1, airline.getAirlineCodename());
+			preparedStmt.setString(2, airline.getAirlineCallsign());
+			preparedStmt.setString(3, airline.getAirlineCountry());
+			preparedStmt.execute();
+			ResultSet rset = preparedStmt.executeQuery();
+			while (rset.next()) {
+			airlineID = rset.getInt("airline_id");
+			}
+			
+			return airlineID;
+			
+			
+		}
+		
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return airlineID;
+	}
+	
+	public Airline getAirlineFromAirlineId(int airline_id) {
+
+		Airline airline = null;
+		try {
+			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+			Connection conn = dbConnection.getConnection();
+			PreparedStatement preparedStmt = conn.prepareStatement(statementToDisplayAirlineFromAirlineId);
+
+			preparedStmt.setInt(1, airline_id);
+			preparedStmt.execute();
+
+			ResultSet rset = preparedStmt.executeQuery();
+			while (rset.next()) {
+				 airline = new Airline(rset.getString("airline_codename"), rset.getString("airline_callsign"),
+						rset.getString("airline_country"));
+
+				return airline;
+			}
+			
+			
+
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return airline;
+		
 	}
 }

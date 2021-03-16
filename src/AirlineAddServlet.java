@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import database.AirlineDatabase;
 import management.AirlineManagementSystem;
 
 @WebServlet("/AirlineAddServlet")
@@ -29,6 +30,7 @@ public class AirlineAddServlet extends HttpServlet {
 		try {
 			if (true) {
 				createAirline(request, response);
+				
 			}
 
 			else {
@@ -45,9 +47,9 @@ public class AirlineAddServlet extends HttpServlet {
 	private void createAirline(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
 
-		String airlineCodename = request.getParameter("airlineCodename");
-		String airlineCallsign = request.getParameter("airlineCallsign");
-		String airlineCountry = request.getParameter("airlineCountry");
+		String airlineCodename = request.getParameter("airlineCodename").toUpperCase();
+		String airlineCallsign = request.getParameter("airlineCallsign").toUpperCase();
+		String airlineCountry = request.getParameter("airlineCountry").toUpperCase();
 		AirlineManagementSystem airlinems = new AirlineManagementSystem();
 
 		airlinems.createAirline(airlineCodename, airlineCallsign, airlineCountry);

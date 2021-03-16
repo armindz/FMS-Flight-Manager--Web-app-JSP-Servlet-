@@ -51,6 +51,8 @@
                 </div>
             </div>
 
+          <a id="settingsButton" href="../settings.jsp"> <img  src="../img/icons/settingsIcon.ico"></a>
+
             <form class="logoutButton" action="../LogoutServlet" method="GET">
                 <button class="logoutbtn">Log out!</button>
             </form>
@@ -61,7 +63,10 @@
 
                    
 
-                    <h3 id="airlinelist">Airline list</h3>
+                    <h3 id="airlinelist">Airline list</h3>	
+                    <div class="managementFunctions">
+                    <a id="createAirlineBtn" href="../form/airlineForm.html">ADD AIRLINE</a>
+                    </div>
                     <%!AirlineManagementSystem airlinems = new AirlineManagementSystem();%>
 
                         <table class="airlineListTable" style="width: 100%">
@@ -97,11 +102,11 @@
                                     <div class="tablefunctions">
                                         <form id="remove" action="../AirlineRemoveServlet" method="GET" name="removeid">
                                             <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getAirlineCodename()%>" /> 
-                                            <input type="submit" name="remove" value="Remove" />
+                                            <input type="submit" name="remove" value="Delete" />
                                         </form>
                                         <form id="update" action="../AirlineUpdateServlet" method="GET" name="updateid">
                                             <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getAirlineCodename()%>" /> 
-                                            <input type="submit" name="update" value="Update" />
+                                            <input type="submit" name="update" value="Edit" />
                                         </form>
                                         <form id="viewAirline" action="../AirlinePreviewServlet" method="GET" name="vievAirlineId">
                                             <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getAirlineCodename()%>" /> 

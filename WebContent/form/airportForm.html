@@ -14,7 +14,7 @@
 <body>
 
 
-      <header>
+    <header>
 
         <a href="../index.html"> <img id="logo" src="../img/icons/fms transparent.png"></a>
         <div class="navbarsections">
@@ -46,11 +46,15 @@
                 </div>
             </div>
 
+            <a id="settingsButton" href="../settings.jsp"> <img src="../img/icons/settingsIcon.ico"></a>
+
             <form class="logoutButton" action="../LogoutServlet" method="GET">
                 <button class="logoutbtn">Log out!</button>
             </form>
         </div>
     </header>
+
+
     <h2 id="formHeading">Airport Creator</h2>
     <form class="airportform" action="../AirportAddServlet" method="GET">
         <img class="formavatar" src="..\img\icons\airportavatar.jpg">

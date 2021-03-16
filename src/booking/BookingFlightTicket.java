@@ -24,6 +24,8 @@ public class BookingFlightTicket {
 	public void bookAFlight(int flightId, char seatRow, int seatNumber, String buyers_Name) {
 
 		try {
+			
+			System.out.println(isSeatAvailable(flightId, seatRow, seatNumber));
 			if (isSeatAvailable(flightId, seatRow, seatNumber)) {
 				
 				Flight flight = flightms.getFlightFromFlightID(flightId);

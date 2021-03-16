@@ -61,7 +61,8 @@
 				</div>
 			</div>
 			
-
+			 <a id="settingsButton" href="settings.jsp"> <img  src="img/icons/settingsIcon.ico"></a>
+			 
 			<form class="logoutButton" action="LogoutServlet" method="GET">
 				<button class="logoutbtn">Log out!</button>
 			</form>
@@ -303,7 +304,7 @@ String strDate= formatter.format(date);
 
                                         <th>Flight ID</th>
                                         <th>Airline</th>
-                                        <th>Airport</th>
+                                        <th>Departure Airport</th>
                                         <th>Destination Airport</th>
                                         <th>Flight class</th>
                                         <th>Date of flight</th>
