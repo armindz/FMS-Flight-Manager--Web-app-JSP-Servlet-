@@ -96,6 +96,7 @@ public class FlightManagementSystem {
 	public void markSeatAsAvailable(int flightId, char seatRow, int seatNumber) {
 
 		boolean isSeatAvailable = true;
+	
 		seatdb.updateDatabaseContent(flightId, seatRow, seatNumber, isSeatAvailable);
 
 	}
@@ -120,7 +121,7 @@ public class FlightManagementSystem {
 
 	private boolean isAirlineCodenameValid(String airlineCodename) { // mechanism for checking if forwarded airline codename is valid
 
-		ArrayList<Airline> listOfAirlines = airlinedb.fetchDatabaseContent(); // // return airline database content
+		ArrayList<Airline> listOfAirlines = (ArrayList<Airline>) airlinedb.fetchDatabaseContent(); // // return airline database content
 																				// through
 		// given ArrayList
 		for (int i = 0; i < listOfAirlines.size(); i++) {
@@ -135,7 +136,7 @@ public class FlightManagementSystem {
 
 	private boolean isAirportCodenameValid(String airportCodename) { // mechanism for checking if forwarded airport codename is valid
 
-		ArrayList<Airport> listOfAirports = airportdb.fetchDatabaseContent(); // return airport database content through
+		ArrayList<Airport> listOfAirports = (ArrayList <Airport>) airportdb.fetchDatabaseContent(); // return airport database content through
 																				// given ArrayList
 
 		for (int i = 0; i < listOfAirports.size(); i++) {
@@ -242,7 +243,7 @@ public class FlightManagementSystem {
 	
 	public ArrayList<Seat> fetchSeatDatabaseContentToList() { // fetch seat database content and return as ArrayList
 
-		ArrayList<Seat> listOfSeats = seatdb.fetchDatabaseContent();
+		ArrayList<Seat> listOfSeats =  (ArrayList <Seat>) seatdb.fetchDatabaseContent();
 		if (listOfSeats.isEmpty()) {
 			System.out.println("There's no seats stored in database!");
 			return null;

@@ -25,11 +25,11 @@ public class UserManagementSystem {
 
 	public void changeUsersPassword(String username, String password) {
 		
-		userdb.updateDatabaseContent(username, password);
+		userdb.updateDatabaseContent(getUserIdFromUsersData(username, password), username, password);
 	}
 
 	private boolean isUserDataUnique(String username) {
-		ArrayList<User> fetchDataToList = userdb.fetchDatabaseContent();
+		ArrayList<User> fetchDataToList = (ArrayList <User>) userdb.fetchDatabaseContent();
 		for (int i = 0; i < fetchDataToList.size(); i++) {
 			if (fetchDataToList.get(i).getUsername().equals(username)) {
 				return false;
@@ -42,7 +42,7 @@ public class UserManagementSystem {
 
 	public boolean isLoginValid(String username, String password) {
 
-		ArrayList<User> fetchDataToList = userdb.fetchDatabaseContent();
+		ArrayList<User> fetchDataToList = (ArrayList<User>) userdb.fetchDatabaseContent();
 		for (int i = 0; i < fetchDataToList.size(); i++) {
 			if (fetchDataToList.get(i).getUsername().equals(username)
 					&& fetchDataToList.get(i).getPassword().equals(password)) {
@@ -54,13 +54,13 @@ public class UserManagementSystem {
 
 	public ArrayList<User> getUserList() {
 
-		ArrayList<User> fetchDataToList = userdb.fetchDatabaseContent();
+		ArrayList<User> fetchDataToList = (ArrayList<User>) userdb.fetchDatabaseContent();
 		return fetchDataToList;
 	}
 	
 	private int getUserIdFromUsersData (String username, String password) {
 		
-		ArrayList<User> fetchDataToList = userdb.fetchDatabaseContent();
+		ArrayList<User> fetchDataToList = (ArrayList<User>) userdb.fetchDatabaseContent();
 		int userID = 0;
 		for (int i = 0; i < fetchDataToList.size(); i++) {
 			if (fetchDataToList.get(i).getUsername().equals(username)

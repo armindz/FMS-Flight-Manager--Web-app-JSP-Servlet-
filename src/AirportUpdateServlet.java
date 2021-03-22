@@ -42,14 +42,16 @@ public class AirportUpdateServlet extends HttpServlet {
 	private void updateAirport(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
 
+		AirportDatabase airportdb = new AirportDatabase();
+		
 		String airportCodename = request.getParameter("airportCodename");
 		String airportFullname = request.getParameter("airportFullname");
 		String airportType = request.getParameter("airportType");
 		String airportCity = request.getParameter("airportCity");
 		String airportCountry = request.getParameter("airportCountry");
-		AirportDatabase airportdb = new AirportDatabase();
+		int airportId = airportdb.getAirportIdFromAirport(airportdb.getAirportFromAirportCodename(airportCodename));
 
-		airportdb.updateDatabaseContent(airportCodename, airportFullname, airportType, airportCity, airportCountry);
+		airportdb.updateDatabaseContent(airportId, airportCodename, airportFullname, airportType, airportCity, airportCountry);
 
 		response.sendRedirect("list/airlineList.jsp");
 	}

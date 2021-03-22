@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import database.AirlineDatabase;
 import management.AirlineManagementSystem;
 import models.Airline;
 
@@ -38,14 +39,14 @@ public class AirlinePreviewServlet extends HttpServlet {
 
 		AirlineManagementSystem airlinems = new AirlineManagementSystem();
 		ArrayList<Airline> airlineDataList = airlinems.fetchDatabaseContentToList();
-
+		AirlineDatabase airlinedb = new AirlineDatabase();
 		try {
 
 			for (int i = 0; i < airlineDataList.size(); i++) {
 
 				if (airlineDataList.get(i).getAirlineCodename().equals(request.getParameter("product_id"))) {
 
-					Airline airline = new Airline(airlineDataList.get(i).getAirlineCodename(),
+					Airline airline = new Airline(airlineDataList.get(i).getAirlineId(),airlineDataList.get(i).getAirlineCodename(),
 							airlineDataList.get(i).getAirlineCallsign(), airlineDataList.get(i).getAirlineCountry());
 					request.setAttribute("airlineData", airline);
 

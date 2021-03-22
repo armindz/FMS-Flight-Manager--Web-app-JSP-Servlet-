@@ -1,11 +1,20 @@
 package models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table (name="users")
 public class User {
 
+	@Column(name="user_id")
+	@Id
 	private int userID;
-
-
+	@Column(name="username")
 	private String username;
+	@Column(name="password")
 	private String password;
 	
 	public User (int userID, String username, String password) {
@@ -40,9 +49,6 @@ public class User {
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
-
-
-
 
 	@Override
 	public String toString() {

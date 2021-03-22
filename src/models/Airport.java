@@ -1,16 +1,35 @@
 package models;
 
-public class Airport {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table (name="airports")
+public class Airport {
+	
+	@Column (name="airport_id")
+	@Id
+	private int airportID;
+	@Column (name="airport_codename")
 	private String airportCodename;
+	@Column (name="airport_fullname")
 	private String airportFullname;
+	@Column (name="airport_type")
 	private String airportType;
+	@Column (name="airport_city")
 	private String airportCity;
+	@Column (name="airport_country")
 	private String airportCountry;
 	
 	
-	public Airport (String airportCodename, String airportFullname, String airportType, String airportCity, String airportCountry) {
+	
+
+
+	public Airport (int airportID, String airportCodename, String airportFullname, String airportType, String airportCity, String airportCountry) {
 		
+		this.airportID = airportID;
 		this.airportCodename = airportCodename;
 		this.airportFullname = airportFullname;
 		this.airportType = airportType;
@@ -18,7 +37,19 @@ public class Airport {
 		this.airportCountry = airportCountry;
 		
 	}
+	
+	public Airport () {
+		
+	}
+	
+	public int getAirportID() {
+		return airportID;
+	}
 
+
+	public void setAirportID(int airportID) {
+		this.airportID = airportID;
+	}
 
 	public String getAirportCodename() {
 		return airportCodename;

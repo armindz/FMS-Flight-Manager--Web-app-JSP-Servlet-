@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import database.AirlineDatabase;
+import models.Airline;
 
 @WebServlet("/AirlineUpdateServlet")
 public class AirlineUpdateServlet extends HttpServlet {
@@ -44,12 +45,15 @@ public class AirlineUpdateServlet extends HttpServlet {
 	private void updateAirline(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
 
+		AirlineDatabase airlinedb = new AirlineDatabase();
 		String airlineCodename = request.getParameter("airlineCodename");
 		String airlineCallsign = request.getParameter("airlineCallsign");
 		String airlineCountry = request.getParameter("airlineCountry");
-		AirlineDatabase airlinedb = new AirlineDatabase();
-
-		airlinedb.updateDatabaseContent(airlineCodename, airlineCallsign, airlineCountry);
+		int airlineId = airlinedb.getAirlineIdFromAirline(airlinedb.getAirlineFromAirlineCodename(airlineCodename));
+		
+		Airline airline = new Airline(airlineId,airlineCodename,airlineCallsign,airlineCountry);
+		
+		airlinedb.updateDatabaseContent(airline);
 		response.sendRedirect("list/airlineList.jsp");
 	}
 

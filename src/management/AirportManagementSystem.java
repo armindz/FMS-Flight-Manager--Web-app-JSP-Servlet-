@@ -1,6 +1,7 @@
 package management;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import database.AirportDatabase;
 import models.Airport;
@@ -16,7 +17,7 @@ public class AirportManagementSystem {
 		try {
 
 			if (isAirportDataUnique(airportCodename) && isAirportCodenameValid(airportCodename)) {
-				Airport airport = new Airport(airportCodename, airportFullname, airportType, airportCity,
+				Airport airport = new Airport(airportdb.generateAirportId(),airportCodename, airportFullname, airportType, airportCity,
 						airportCountry);
 				addAirportToDatabase(airport);
 				System.out.println("Airport successfully created!");
@@ -33,9 +34,10 @@ public class AirportManagementSystem {
 
 	public Airport getAirportFromCodename(String airportCodename) {
 
-		ArrayList<Airport> listOfAirports = fetchDatabaseContentToList();
+		List<Airport> listOfAirports = fetchDatabaseContentToList();
 
 		for (int i = 0; i < listOfAirports.size(); i++) {
+			int airportIdFromList = listOfAirports.get(i).getAirportID();
 			String airportCodenameFromList = listOfAirports.get(i).getAirportCodename();
 			String airportFullnameFromList = listOfAirports.get(i).getAirportFullname();
 			String airportTypeFromList = listOfAirports.get(i).getAirportType();
@@ -43,7 +45,7 @@ public class AirportManagementSystem {
 			String airportCountryFromList = listOfAirports.get(i).getAirportCountry();
 
 			if (airportCodenameFromList.equals(airportCodename)) {
-				Airport airport = new Airport(airportCodenameFromList, airportFullnameFromList, airportTypeFromList,
+				Airport airport = new Airport(airportIdFromList, airportCodenameFromList, airportFullnameFromList, airportTypeFromList,
 						airportCityFromList, airportCountryFromList);
 				return airport;
 

@@ -1,43 +1,35 @@
 package database;
 
-import java.sql.*;
-import java.util.ArrayList;
 
-import models.Airline;
+import java.util.ArrayList;
+import java.util.List;
+
 import models.Airport;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
 
 public class AirportDatabase {
 
-	private static String statementToStoreDataIntoAirports = "INSERT INTO airports"
-			+ "(airport_id, airport_codename, airport_fullname, airport_type, airport_city, airport_country) values "
-			+ " (?,?,?, ?,?, ?);";
-	private static String statementToDisplayDataOfAirports = "SELECT * FROM airports";
-	private static String statementToUpdateAirportsData = "UPDATE airports set airport_fullname = ?, airport_type = ?, airport_city =?, airport_country where  airport_codename= ?";
-	private static String statementToDeleteDataFromAirports = "DELETE from airports where airport_codename= ?";
-	private static String statementToGetIdFromAirportData = "SELECT airport_id FROM airports WHERE airport_codename=? "
-			+ "AND airport_fullname=? AND airport_type=? AND airport_city=? AND airport_country=?";
 
-	private static String statementToDisplayAirportFromAirportId = "SELECT * FROM airports WHERE airport_id=?";
 	public void storeToDatabase(Airport airport) {
 
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToStoreDataIntoAirports);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			preparedStmt.setInt(1, generateAirportId()); // airport_id Column
-			preparedStmt.setString(2, airport.getAirportCodename()); // airport_codename Column
-			preparedStmt.setString(3, airport.getAirportFullname()); // airport_fullname Column
-			preparedStmt.setString(4, airport.getAirportType()); // airport_type Column
-			preparedStmt.setString(5, airport.getAirportCity()); // airport_city Column
-			preparedStmt.setString(6, airport.getAirportCountry()); // airport_country Column
-
-			preparedStmt.execute();
-
-			conn.close();
-			preparedStmt.close();
-
+			Transaction transaction = session.beginTransaction();
+			session.save(airport);
+			transaction.commit();
 		}
 
 		catch (Exception e) {
@@ -46,104 +38,96 @@ public class AirportDatabase {
 
 	}
 
-	public static int generateAirportId() { // mechanism for generating airport ID based on last stored ID in database
-
-		int airportID = 0;
-		try {
-
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(statementToDisplayDataOfAirports);
-
-			while (rs.next()) {
-
-				if (rs.isLast()) {
-					airportID = rs.getInt(1);
-					airportID++;
-				}
-			}
-
-			return airportID;
-		}
-
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return airportID;
-	}
-
+	
+	@SuppressWarnings("unchecked")
 	public ArrayList<Airport> fetchDatabaseContent() { // mechanism for fetching content from database and returning as
-														// ArrayList
+													// ArrayList
 
 		ArrayList<Airport> airports = new ArrayList<>();
 		try {
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceRegistry);
+			Session session = sessionFactory.openSession();
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			Statement stmt = conn.createStatement();
-			ResultSet rset = stmt.executeQuery(statementToDisplayDataOfAirports);
-			airports.clear();
-			while (rset.next()) {
-
-				Airport airport = new Airport(rset.getString("airport_codename"), rset.getString("airport_fullname"),
-						rset.getString("airport_type"), rset.getString("airport_city"),
-						rset.getString("airport_country"));
-
-				airports.add(airport);
-			}
-
+			Transaction transaction = session.beginTransaction();
+			airports = (ArrayList <Airport>) session.createQuery("from Airport").list();
+			transaction.commit();
+			return (ArrayList <Airport>) airports;
 		}
 
 		catch (Exception e) {
 
-			System.out.println("Something went wrong");
+			System.out.println("Something went wrong with fetching database content");
 			e.printStackTrace();
 		}
 		return airports;
 
 	}
 
-	public void updateDatabaseContent(String Airport_Codename, String Airport_Fullname, String Airport_Type,
-			String Airport_City, String Airport_Country) {
+	public void updateDatabaseContent(int airportID, String airportCodename, String airportFullname, String airportType,
+			String airportCity, String airportCountry) {
 
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToUpdateAirportsData);
-
-			preparedStmt.setString(2, Airport_Fullname); // update Airport_Fullname column
-			preparedStmt.setString(3, Airport_Type); // update Airport_Type column
-			preparedStmt.setString(4, Airport_City); // update Airport_City column
-			preparedStmt.setString(5, Airport_Country); // update Airport_Country
-			preparedStmt.setString(6, Airport_Codename); // update Airport_Codename column
-			preparedStmt.executeUpdate();
-
-			conn.close();
-			preparedStmt.close();
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(cfg.getProperties()).buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceRegistry);
+			Session session = sessionFactory.openSession();
+			
+			Transaction transaction = session.beginTransaction();
+			Query query = session.createQuery("update Airport set airportCodename=? AND airportFullname=? AND airportType=? "
+					+ "AND airportCity=? AND airportCountry=? WHERE airportID=?");
+			
+			query.setString(1, airportCodename);
+			query.setString(2, airportFullname);
+			query.setString(3, airportType);
+			query.setString(4, airportCity);
+			query.setString(5, airportCountry);
+			query.setInteger(6, airportID);
+			
+			query.executeUpdate();
+			transaction.commit();
 		}
 
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
+	
+	public void updateDatabaseContent (Airport airport) {
+		
+		try {
+		
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(cfg.getProperties()).buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceRegistry);
+			Session session = sessionFactory.openSession();
+			
+			Transaction transaction = session.beginTransaction();
+			session.update(airport);
+			transaction.commit();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-	public void deleteContentFromDatabase(String Airport_Codename) { // deleting from database content found using
-																		// Airport_Codename as it is unique
-
+	public void deleteContentFromDatabase(String airportCodename) { // deleting from database content found using
+																	// Airport_Codename as it is unique
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToDeleteDataFromAirports);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			preparedStmt.setString(1, Airport_Codename);
-			preparedStmt.executeUpdate();
+			Transaction transaction = session.beginTransaction();
+			session.delete(getAirportFromAirportCodename(airportCodename));
+			transaction.commit();
 
-			conn.close();
-			preparedStmt.close();
 		}
 
 		catch (Exception e) {
@@ -152,28 +136,47 @@ public class AirportDatabase {
 
 	}
 
-	public int getAirportIdFromAirport(Airport airport) {
+	public void deleteContentFromDatabase(Airport airport) {
 
+
+		try {
+
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+
+			Transaction transaction = session.beginTransaction();
+			session.delete(airport);
+			transaction.commit();
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static int generateAirportId() { // mechanism for generating airport ID based on last stored ID in database
+
+		List<Airport> listOfAirports = new ArrayList<>();
 		int airportID = 0;
 		try {
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToGetIdFromAirportData);
 
-			preparedStmt.setString(1, airport.getAirportCodename());
-			preparedStmt.setString(2, airport.getAirportFullname());
-			preparedStmt.setString(3, airport.getAirportType());
-			preparedStmt.setString(4, airport.getAirportCity());
-			preparedStmt.setString(5, airport.getAirportCountry());
-			preparedStmt.execute();
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			ResultSet rset = preparedStmt.executeQuery();
-			while (rset.next()) {
-				airportID = rset.getInt("airport_id");
-			}
+			Transaction transaction = session.beginTransaction();
+			listOfAirports = session.createQuery("from Airport order by airport_id desc limit1").list();
+			airportID = listOfAirports.get(0).getAirportID();
+			airportID++;
+			transaction.commit();
 
 			return airportID;
-
 		}
 
 		catch (Exception e) {
@@ -182,34 +185,64 @@ public class AirportDatabase {
 
 		return airportID;
 	}
-	
-	public Airport getAirportFromAirportId(int airport_id) {
 
-		Airport airport = null;
-		try {
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToDisplayAirportFromAirportId);
+	public int getAirportIdFromAirport(Airport airport) {
 
-			preparedStmt.setInt(1, airport_id);
-			preparedStmt.execute();
-
-			ResultSet rset = preparedStmt.executeQuery();
-			while (rset.next()) {
-				airport = new Airport(rset.getString("airport_codename"), rset.getString("airport_fullname"),
-						rset.getString("airport_type"), rset.getString("airport_city"),
-						rset.getString("airport_country"));
-				return airport;
-			}
-			
-			
-
-		}
+		int airportID = 0;
 		
+		try {
+			
+			ArrayList<Airport> listOfAirports = fetchDatabaseContent();
+			for (int i = 0; i < listOfAirports.size(); i++) {
+				if (listOfAirports.get(i).equals(airport)) {
+					airportID = listOfAirports.get(i).getAirportID();
+					return airportID;
+				}
+			}
+		}
+
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		return airport;
+
+		return airportID;
+	}
+
+	public Airport getAirportFromAirportCodename(String airportCodename) {
+
+		Airport airport = null;
 		
+		try {
+			
+			ArrayList<Airport> listOfAirports = fetchDatabaseContent();
+			for (int i = 0; i < listOfAirports.size(); i++) {
+				if (listOfAirports.get(i).getAirportCodename().equals(airportCodename)) {
+					airport = listOfAirports.get(i);
+					return airport;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return airport;
+	}
+
+	public Airport getAirportFromAirportId(int airport_id) {
+
+		Airport airport = null;
+		
+		try {
+			
+			ArrayList<Airport> listOfAirports = fetchDatabaseContent();
+			for (int i = 0; i < listOfAirports.size(); i++) {
+				if (listOfAirports.get(i).getAirportID() == airport_id) {
+					airport = listOfAirports.get(i);
+					return airport;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return airport;
 	}
 }

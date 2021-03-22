@@ -21,7 +21,7 @@ public class AirlineManagementSystem {
 		
 		
 			if (isAirlineDataUnique(airlineCodename) && isAirlineCodenameValid(airlineCodename)) {
-				Airline airline = new Airline(airlineCodename, airlineCallsign, airlineCountry);
+				Airline airline = new Airline(airlinedb.generateAirlineId(), airlineCodename, airlineCallsign, airlineCountry);
 				addAirlineToDatabase(airline);
 				System.out.println("Airline successfully created!");
 			} else {
@@ -54,7 +54,7 @@ public class AirlineManagementSystem {
 		ArrayList <Airline> listOfAirlines = fetchDatabaseContentToList();
 		
 		for (int i = 0; i < listOfAirlines.size(); i++) {
-			
+			int airlineID = listOfAirlines.get(i).getAirlineId();
 			String airlineCodenameFromList = listOfAirlines.get(i).getAirlineCodename();
 			String airlineCallsignFromList = listOfAirlines.get(i).getAirlineCallsign();
 			String airlineCountryFromList = listOfAirlines.get(i).getAirlineCountry();
@@ -62,7 +62,7 @@ public class AirlineManagementSystem {
 			
 			 if (airlineCodenameFromList.equals(airlineCodename) ) {
 				 
-				Airline airline = new Airline(airlineCodenameFromList, airlineCallsignFromList, airlineCountryFromList);
+				Airline airline = new Airline(airlineID, airlineCodenameFromList, airlineCallsignFromList, airlineCountryFromList);
 				return airline;
 			 }
 						
@@ -95,7 +95,7 @@ public class AirlineManagementSystem {
 
 	public ArrayList <Airline> fetchDatabaseContentToList () {
 		
-		return airlinedb.fetchDatabaseContent();
+		return (ArrayList<Airline>) airlinedb.fetchDatabaseContent();
 	}
 	private void addAirlineToDatabase(Airline airline) {
 		try {

@@ -1,37 +1,35 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
+
+import models.Airline;
 import models.User;
 
 public class UserDatabase {
 
-	private static String statementToStoreDataIntoUsers = "INSERT INTO users" + "(user_ID, username, password) values "
-			+ " (?,?,?);";
-	private static String statementToDisplayDataOfUsers = "SELECT * FROM users";
-	private static String statementToUpdateUsersData = "UPDATE users set password=? where  username=? ";
-	private static String statementToDeleteDataFromUsers = "DELETE from users where user_ID";
 
 	public void storeToDatabase(User user) {
 
 		try {
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(User.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToStoreDataIntoUsers);
+			Transaction transaction = session.beginTransaction();
+			session.save(user);
+			transaction.commit();
 
-			preparedStmt.setInt(1, generateUserID()); // UserID Column
-			preparedStmt.setString(2, user.getUsername()); // Username Column
-			preparedStmt.setString(3, user.getPassword()); // Password Column
-
-			preparedStmt.execute();
-
-			conn.close();
-			preparedStmt.close();
 		}
 
 		catch (Exception e) {
@@ -39,97 +37,132 @@ public class UserDatabase {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public ArrayList<User> fetchDatabaseContent() { // mechanism for fetching content from database
 													// and returning as
-		// ArrayList
-
-		ArrayList<User> users = new ArrayList<>();
+		List<User> listOfUsers = new ArrayList<>();
 
 		try {
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			Statement stmt = conn.createStatement();
-			ResultSet rset = stmt.executeQuery(statementToDisplayDataOfUsers);
-			while (rset.next()) {
-				User user = new User(rset.getInt("user_ID"), rset.getString("username"), rset.getString("password"));
 
-				users.add(user);
-			}
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(User.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			conn.close();
-		}
+			Transaction transaction = session.beginTransaction();
+			listOfUsers = session.createQuery("from User").list();
+			transaction.commit();
 
-		catch (Exception e) {
+			return  (ArrayList <User>) listOfUsers;
 
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-
-		return users;
+		return  (ArrayList <User>) listOfUsers;
 	}
 
-	public void updateDatabaseContent(String username, String password) {
+	public void updateDatabaseContent(int userID, String username, String password) {
 
 		try {
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToUpdateUsersData);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(User.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			preparedStmt.setString(1, username); //
-			preparedStmt.setString(2, password); // update password column
-
-			preparedStmt.executeUpdate();
-
-			conn.close();
-			preparedStmt.close();
+			Transaction transaction = session.beginTransaction();
+			Query query = session.createQuery("UPDATE User SET username=? AND password=? WHERE user_id=?");
+			query.setString(1, username);
+			query.setString(2, password);
+			query.setInteger(3, userID);
+			transaction.commit();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 	}
-
-	public void deleteContentFromDatabase(int userID) {
+	public void updateDatabaseContent(User user) {
 
 		try {
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToDeleteDataFromUsers);
-			preparedStmt.setInt(1, userID);
-			preparedStmt.executeUpdate();
 
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(User.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-	}
-
-	public int generateUserID() { // mechanism for generating userID based on last stored ID in
-									// database
-		int userID = 0;
-		try {
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(statementToDisplayDataOfUsers);
-			
-
-			while (rs.next()) {
-
-				if (rs.isLast()) {
-					userID = rs.getInt(1);
-					userID++;
-				}
-			}
-			return userID;
+			Transaction transaction = session.beginTransaction();
+			session.update(user);
+			transaction.commit();
 		}
 
 		catch (Exception e) {
-			System.out.println("Something went wrong with generating userID");
 			e.printStackTrace();
 		}
+	}
+	
+	public void deleteContentFromDatabase(int userID) {
+		
+		Configuration cfg = new Configuration().configure().addAnnotatedClass(User.class);
+		ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+				.buildServiceRegistry();
+		SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+		Session session = sessionFactory.openSession();
 
-		return 0;
+		Transaction transaction = session.beginTransaction();
+		Query query = session.createQuery("DELETE FROM User WHERE user_id=?");
+		query.setInteger(1, userID);
+		transaction.commit();
+	}
+	public void deleteContentFromDatabase(User user) {
+
+		try {
+
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(User.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+
+			Transaction transaction = session.beginTransaction();
+			session.delete(user);
+			transaction.commit();
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public int generateUserID() { // mechanism for generating userID based on last stored ID in
+									// database
+
+		int userID = 0;
+
+		try {
+
+			List<User> list = new ArrayList<>();
+
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(User.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+
+			Transaction transaction = session.beginTransaction();
+			list = session.createQuery("FROM User order by user_id desc limit 1").list();
+			userID = list.get(0).getUserID();
+			userID++;
+			transaction.commit();
+
+			return userID;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return userID;
 	}
 
 }

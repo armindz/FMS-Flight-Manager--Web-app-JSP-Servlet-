@@ -1,34 +1,33 @@
 package database;
 
-import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
+
+import models.Airline;
 import models.Seat;
 
 public class SeatDatabase {
 
-	private static String statementToStoreDataIntoSeats = "INSERT INTO seats"
-			+ "(seat_id, flight_id, seat_row, seat_number, is_seat_available) values " + " (?,?,?,?,?);";
-	private static String statementToDisplayDataOfSeats = "SELECT * FROM seats";
-	private static String statementToUpdateSeatsData = "UPDATE seats set is_seat_available= ? where flight_id=? AND seat_row= ? AND seat_number= ?";
-	private static String statementToDeleteDataFromSeats = "DELETE from seats where flight_id=?";
-
 	public void storeToDatabase(Seat seat) {
 
 		try {
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToStoreDataIntoSeats);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Seat.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			preparedStmt.setInt(1, generateSeatId());
-			preparedStmt.setInt(2, seat.getFlightId()); // FlightID Column
-			preparedStmt.setString(3, String.valueOf(seat.getSeatRow())); // Seatrow Column
-			preparedStmt.setInt(4, seat.getSeatNumber()); // Seatnumber Column
-			preparedStmt.setBoolean(5, seat.isSeatAvailable()); // IsSeatAvailable Column
-
-			preparedStmt.execute();
-
-			conn.close();
-			preparedStmt.close();
+			Transaction transaction = session.beginTransaction();
+			session.save(seat);
+			transaction.commit();
 
 		}
 
@@ -38,84 +37,55 @@ public class SeatDatabase {
 
 	}
 
-	public static int generateSeatId() { // mechanism for generating seat ID based on last stored ID in database
+	@SuppressWarnings("unchecked")
+	public ArrayList<Seat> fetchDatabaseContent() { // mechanism for fetching content from database and returning as List
 
-		int seatID = 0;
+		List<Seat> listOfSeats = new ArrayList<>();
+
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(statementToDisplayDataOfSeats);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Seat.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			while (rs.next()) {
+			Transaction transaction = session.beginTransaction();
+			listOfSeats = session.createQuery("from Seat").list();
+			transaction.commit();
 
-				if (rs.isLast()) {
-					seatID = rs.getInt(1);
-					seatID++;
-				}
-			}
+			return  (ArrayList <Seat>) listOfSeats;
 
-			return seatID;
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return seatID;
+		return  (ArrayList <Seat>) listOfSeats;
 	}
-
-	public ArrayList<Seat> fetchDatabaseContent() { // mechanism for fetching content from database and returning as
-													// ArrayList
-
-		ArrayList<Seat> seats = new ArrayList<>();
+	
+	// mechanism for updating database content
+	public void updateDatabaseContent(int flightID, char seatRow, int seatNumber, boolean isSeatAvailable) { 
 		try {
+			
+			int seatID = getSeatIdFromSeatData(flightID,seatRow,seatNumber);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Seat.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+			
+			Transaction transaction = session.beginTransaction();
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			Statement stmt = conn.createStatement();
-			ResultSet rset = stmt.executeQuery(statementToDisplayDataOfSeats);
+			Query query = session.createQuery(
+					"UPDATE Seat SET flightId=? AND seatRow=? AND seatNumber=? AND isSeatAvailable=? WHERE seatId=?");
+			query.setInteger(1, flightID);
+			query.setCharacter(2, seatRow);
+			query.setInteger(3, seatNumber);
+			query.setBoolean(4, isSeatAvailable);
+			query.setInteger(5, seatID);
+			query.executeUpdate();
 
-			while (rset.next()) {
+			transaction.commit();
 
-				Seat seat = new Seat(rset.getInt("flight_id"), rset.getString("seat_row").charAt(0),
-						rset.getInt("seat_number"), rset.getBoolean("is_seat_available"));
-
-				seats.add(seat);
-			}
-			conn.close();
-		}
-
-		catch (Exception e) {
-
-			e.printStackTrace();
-		}
-		return seats;
-
-	}
-
-	public void updateDatabaseContent(int FlightID, char seatRow, int seatNumber, boolean isSeatAvailable) { // mechanism
-																												// for
-																												// updating
-																												// database
-																												// content
-
-		try {
-
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToUpdateSeatsData);
-
-			preparedStmt.setBoolean(1, isSeatAvailable); // update isSeatAvailable column
-			preparedStmt.setInt(2, FlightID); // where Flight_ID
-			preparedStmt.setString(3, String.valueOf(seatRow)); // where seatRow
-			preparedStmt.setInt(4, seatNumber); // where seatNumber
-
-			preparedStmt.executeUpdate();
-
-			conn.close();
-			preparedStmt.close();
 		}
 
 		catch (Exception ex) {
@@ -124,24 +94,139 @@ public class SeatDatabase {
 
 	}
 
-	public void deleteContentFromDatabase(int flight_ID) { // deleting content from database
+	public void updateDatabaseContent(Seat seat) {
 
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToDeleteDataFromSeats);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Seat.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			preparedStmt.setInt(1, flight_ID);
-			preparedStmt.executeUpdate();
+			Transaction transaction = session.beginTransaction();
+			session.update(seat);
+			transaction.commit();
+		}
 
-			conn.close();
-			preparedStmt.close();
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void deleteContentFromDatabase(int flight_ID) { // deleting content from database via flightID
+
+		try {
+
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Seat.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+
+			Transaction transaction = session.beginTransaction();
+
+			Query query = session.createQuery("DELETE Seat  WHERE flightId=?");
+			query.setInteger(1, flight_ID);
+			query.executeUpdate();
+
+			transaction.commit();
 		}
 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void deleteContentFromDatabase(Seat seat) {
+
+		try {
+
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Seat.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+
+			Transaction transaction = session.beginTransaction();
+			session.delete(seat);
+			transaction.commit();
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static int generateSeatId() { // mechanism for generating seat ID based on last stored ID in database
+
+		int seatID = 0;
+
+		try {
+
+			List<Seat> list = new ArrayList<>();
+
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Seat.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+
+			Transaction transaction = session.beginTransaction();
+			list = session.createQuery("FROM Seat order by seat_id desc limit 1").list();
+			seatID = list.get(0).getSeatId();
+			seatID++;
+			transaction.commit();
+
+			return seatID;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return seatID;
+	}
+
+	public Seat getSeatFromSeatId(int seatId) {
+
+		Seat seat = null;
+		try {
+			List<Seat> listOfSeats = fetchDatabaseContent();
+
+			for (int i = 0; i < listOfSeats.size(); i++) {
+
+				if (listOfSeats.get(i).getSeatId() == seatId) {
+					seat = listOfSeats.get(i);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return seat;
+	}
+	
+	public int getSeatIdFromSeatData (int flightId, char seatRow, int seatNumber) {
+		
+		int seatID= 0;
+		try {
+		List <Seat> listOfSeats = fetchDatabaseContent();
+		
+		for (int i=0; i<listOfSeats.size();i++) {
+		
+			if (listOfSeats.get(i).getFlightId()==flightId && listOfSeats.get(i).getSeatRow()==seatRow && listOfSeats.get(i).getSeatNumber()==seatNumber) {
+				
+				seatID = listOfSeats.get(i).getSeatId();
+				return seatID;
+			}
+		}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return seatID;
 	}
 }

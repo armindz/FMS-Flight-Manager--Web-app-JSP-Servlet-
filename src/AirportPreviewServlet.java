@@ -38,7 +38,7 @@ public class AirportPreviewServlet extends HttpServlet {
 	protected void airportData(HttpServletRequest request, HttpServletResponse response) {
 
 		AirportManagementSystem airportms = new AirportManagementSystem();
-		ArrayList<Airport> airportDataList = airportms.fetchDatabaseContentToList();
+		ArrayList<Airport> airportDataList = (ArrayList <Airport>) airportms.fetchDatabaseContentToList();
 
 		try {
 
@@ -46,7 +46,7 @@ public class AirportPreviewServlet extends HttpServlet {
 
 				if (airportDataList.get(i).getAirportCodename().equals(request.getParameter("product_id"))) {
 
-					Airport airport = new Airport(airportDataList.get(i).getAirportCodename(),
+					Airport airport = new Airport(airportDataList.get(i).getAirportID(), airportDataList.get(i).getAirportCodename(),
 							airportDataList.get(i).getAirportFullname(), airportDataList.get(i).getAirportType(),
 							airportDataList.get(i).getAirportCity(), airportDataList.get(i).getAirportCountry());
 					request.setAttribute("airportData", airport);
