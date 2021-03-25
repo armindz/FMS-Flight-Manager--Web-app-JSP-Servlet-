@@ -143,15 +143,15 @@
                                             <td>
                                             <div class="tablefunctions">
                                                 <form id="remove" action="../FlightRemoveServlet" method="GET" name="removeid">
-                                                    <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlight_id()%>" />
+                                                    <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlightId()%>" />
                                                     <input type="submit" name="remove" value="Delete" />
 													</form>
                                                     <form id="update" action="../FlightUpdateServlet" method="GET" name="updateid">
-                                                        <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlight_id()%>" />
+                                                        <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlightId()%>" />
                                                         <input type="submit" name="update" value="Edit" />
 														</form>
                                                         <form id="viewFlight" action="../BookAFlight" method="GET" name="viewFlight">
-                                                            <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlight_id()%>" />
+                                                            <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlightId()%>" />
                                                             <input type="submit" name="view" value="View" />
 
                                                         </form>

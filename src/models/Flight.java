@@ -1,24 +1,57 @@
 package models;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import database.FlightDatabase;
 
+@Entity
+@Table(name = "flights")
 public class Flight {
+	@Transient
 	private ArrayList<Seat> listOfSeats = new ArrayList<Seat>();
 
+	@Id
+	@Column(name = "flight_id")
+	private int flightId;
+
+	@OneToOne
+	@JoinColumn(name = "airline", referencedColumnName = "airline_id")
 	private Airline airline;
+
+	@OneToOne
+	@JoinColumn(name = "departure_airport", referencedColumnName = "airport_id")
 	private Airport airport;
+
+	@OneToOne
+	@JoinColumn(name = "destination_airport", referencedColumnName = "airport_id")
 	private Airport destinationAirport;
+
+	@Column(name = "flight_class")
 	private String flightClass;
+	@Column(name = "date_of_flight")
 	private Calendar dateOfFlight;
+	@Column(name = "seat_row")
 	private char seatRow;
+	@Column(name = "seat_number")
 	private int seatNumber;
+	@Column(name = "flight_price")
 	private double flightPrice;
-	private int flightId = FlightDatabase.generateFlightId();
 
 	public Flight(int flightId, Airline airline, Airport airport, Airport destinationAirport, String flightClass,
 			Calendar dateOfFlight, char seatRow, int seatNumber, double flightPrice) {
@@ -32,6 +65,10 @@ public class Flight {
 		this.seatNumber = seatNumber;
 		this.flightPrice = flightPrice;
 		this.flightId = flightId;
+	}
+
+	public Flight() {
+
 	}
 
 	public Airline getAirline() {
@@ -64,14 +101,6 @@ public class Flight {
 
 	public void setFlightId(int flightId) {
 		this.flightId = flightId;
-	}
-
-	public  int getFlight_id() {
-		return flightId;
-	}
-
-	public  void setFlight_id(int flight_id) {
-		this.flightId = flight_id;
 	}
 
 	public String getFlightClass() {
@@ -130,10 +159,11 @@ public class Flight {
 
 	@Override
 	public String toString() {
-		return "\n\n\n" + "\n Flight ID: " + flightId + " |\n Airline  :  "  + airline + "\n Airport  :  " + airport
+		return "\n\n\n" + "\n Flight ID: " + flightId + " |\n Airline  :  " + airline + "\n Airport  :  " + airport
 				+ "\n Destination airport  :  " + destinationAirport + "\n Flight class  :  " + flightClass
 				+ "\n Date of flight  :  " + dateOfFlight.getTime() + "\n Maximum seat row  :  " + seatRow
-				+ "\n Number of seats per row :  " + seatNumber + "\n Flight price  :  " + flightPrice + "KM|\n\n\n --------------------------------- \n";
+				+ "\n Number of seats per row :  " + seatNumber + "\n Flight price  :  " + flightPrice
+				+ "KM|\n\n\n --------------------------------- \n";
 	}
 
 	public void setListOfSeats(ArrayList<Seat> listOfSeats) {

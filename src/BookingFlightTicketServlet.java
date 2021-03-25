@@ -2,6 +2,8 @@ import management.FlightManagementSystem;
 import models.Flight;
 import models.FlightTicket;
 import booking.BookingFlightTicket;
+import database.FlightTicketDatabase;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -74,7 +76,7 @@ public class BookingFlightTicketServlet extends HttpServlet {
 		FlightManagementSystem flightms = new FlightManagementSystem();
 		BookingFlightTicket bft = new BookingFlightTicket();
 		ArrayList<Flight> flightDataList = flightms.fetchFlightDatabaseContentToList();
-		
+		FlightTicketDatabase flightTicketDb = new FlightTicketDatabase();
 		
 
 		try {
@@ -88,10 +90,7 @@ public class BookingFlightTicketServlet extends HttpServlet {
 				// prevent user to book the same ticket twice by validating seat availability
 				if (flightIdFromList.equals(request.getParameter("flightID")) /*&& bft.isSeatAvailable(flightID, seatRow, seatNumber)*/) {
 
-					FlightTicket flightTicket = new FlightTicket(flightID, flightDataList.get(i).getAirline(),
-							flightDataList.get(i).getAirport(), flightDataList.get(i).getDestinationAirport(),
-							flightDataList.get(i).getFlightClass(), flightDataList.get(i).getDateOfFlight(), seatRow,
-							seatNumber, flightDataList.get(i).getFlightPrice(), buyersName);
+					FlightTicket flightTicket = flightTicketDb.getFlightTicketFromTicketData(flightID, seatRow, seatNumber);
 					request.setAttribute("flightTicketData", flightTicket);
 
 					RequestDispatcher rd = request.getRequestDispatcher("view/flightTicket.jsp");

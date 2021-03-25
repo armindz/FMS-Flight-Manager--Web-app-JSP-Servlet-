@@ -11,7 +11,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-import models.Airline;
 import models.Seat;
 
 public class SeatDatabase {
@@ -40,7 +39,7 @@ public class SeatDatabase {
 	@SuppressWarnings("unchecked")
 	public ArrayList<Seat> fetchDatabaseContent() { // mechanism for fetching content from database and returning as List
 
-		List<Seat> listOfSeats = new ArrayList<>();
+		ArrayList<Seat> listOfSeats = new ArrayList<>();
 
 		try {
 
@@ -51,15 +50,15 @@ public class SeatDatabase {
 			Session session = sessionFactory.openSession();
 
 			Transaction transaction = session.beginTransaction();
-			listOfSeats = session.createQuery("from Seat").list();
+			listOfSeats = (ArrayList <Seat>) session.createQuery("from Seat").list();
 			transaction.commit();
 
-			return  (ArrayList <Seat>) listOfSeats;
+			return  listOfSeats;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return  (ArrayList <Seat>) listOfSeats;
+		return  listOfSeats;
 	}
 	
 	// mechanism for updating database content
@@ -126,7 +125,7 @@ public class SeatDatabase {
 
 			Transaction transaction = session.beginTransaction();
 
-			Query query = session.createQuery("DELETE Seat  WHERE flightId=?");
+			Query query = session.createQuery("DELETE From Seat  WHERE flightId=?");
 			query.setInteger(1, flight_ID);
 			query.executeUpdate();
 
@@ -175,13 +174,16 @@ public class SeatDatabase {
 			Session session = sessionFactory.openSession();
 
 			Transaction transaction = session.beginTransaction();
-			list = session.createQuery("FROM Seat order by seat_id desc limit 1").list();
+			list = (ArrayList <Seat>) session.createQuery("FROM Seat order by seat_id desc limit 1").list();
 			seatID = list.get(0).getSeatId();
+			System.out.println("BROJ PRIJE:" + seatID);
 			seatID++;
+			
+			System.out.println("BROJ : " + seatID);
 			transaction.commit();
 
 			return seatID;
-
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -100,7 +100,7 @@ public class AirlineManagementSystem {
 	private void addAirlineToDatabase(Airline airline) {
 		try {
 			airlinedb.storeToDatabase(airline);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}

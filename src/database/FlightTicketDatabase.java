@@ -5,6 +5,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import org.hibernate.Transaction;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
+
 import management.AirlineManagementSystem;
 import management.AirportManagementSystem;
 
@@ -12,41 +20,23 @@ import models.FlightTicket;
 
 public class FlightTicketDatabase {
 
-	private static String statementToStoreDataIntoFlightTickets = "INSERT INTO flight_tickets"
-			+ "(ticket_ID, flight_ID, airline_codename, airport_codename, destination_airport, flight_class, date_of_flight, seat_row, seat_number, flight_price, buyers_name) values "
-			+ " (?,?,?,?,?,?,?,?,?,?,?);";
-	private static String statementToDisplayDataOfFlightTickets = "SELECT * FROM flight_tickets";
-	private static String statementToUpdateFlightTicketsData = "UPDATE flight_tickets set airline_codename=?,airport_codename=?, destination_airport=?, flight_class =?, "
-			+ "date_of_flight =?, flight_price=?  where flight_ID=?, seat_row =?, seat_number =?,  buyers_name =?";
-	private static String statementToDeleteDataFromFlightTickets = "DELETE from flight_tickets where flight_ID=? AND seat_row=? AND seat_number=?";
-	private static String statementToDeleteAllDataFromFlightTicketsRelatedToSpecificFlight = "DELETE from flight_tickets where flight_ID=? ";
-	final String STATEMENT_IF_CODENAME_IS_NULL = "NOT AVAILABLE";
 	AirlineManagementSystem airlinems = new AirlineManagementSystem();
 	AirportManagementSystem airportms = new AirportManagementSystem();
 
 	public void storeToDatabase(FlightTicket flightTicket) {
 
 		try {
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToStoreDataIntoFlightTickets);
 
-			preparedStmt.setInt(1, generateTicketId());
-			preparedStmt.setInt(2, flightTicket.getFlightId()); // Flight_ID Column
-			preparedStmt.setInt(3, airlinems.getAirlineIdFromAirline(flightTicket.getAirline())); // AirlineCodename Column
-			preparedStmt.setInt(4, airportms.getAirportIdFromAirport(flightTicket.getAirport())); // AirportCodename Column
-			preparedStmt.setInt(5, airportms.getAirportIdFromAirport(flightTicket.getDestinationAirport())); // Destination Airport
-			preparedStmt.setString(6, flightTicket.getFlightClass()); // Flight_Class Column
-			preparedStmt.setTimestamp(7, flightTicket.getDateOfFlightTicketInDateTime(flightTicket.getDateOfFlight())); // Date_OF_Flight
-			preparedStmt.setString(8, String.valueOf(flightTicket.getSeatRow())); // SeatRow Column
-			preparedStmt.setInt(9, flightTicket.getSeatNumber()); // Seat_Number Column
-			preparedStmt.setDouble(10, flightTicket.getFlightPrice()); // Flight_Price Column
-			preparedStmt.setString(11, flightTicket.getBuyersName());
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-			preparedStmt.execute();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			conn.close();
-			preparedStmt.close();
+			Transaction transaction = session.beginTransaction();
+			session.save(flightTicket);
+			transaction.commit();
 
 		}
 
@@ -56,23 +46,27 @@ public class FlightTicketDatabase {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public static int generateTicketId() { // mechanism for generating seat ID based on last stored ID in database
 
 		int ticketID = 0;
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(statementToDisplayDataOfFlightTickets);
+			ArrayList<FlightTicket> listOfFlightTickets = new ArrayList<FlightTicket>();
 
-			while (rs.next()) {
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-				if (rs.isLast()) {
-					ticketID = rs.getInt(1);
-					ticketID++;
-				}
-			}
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+
+			Transaction transaction = session.beginTransaction();
+			listOfFlightTickets = (ArrayList<FlightTicket>) session
+					.createQuery("From FlightTicket order by ticket_id desc limit 1").list();
+			ticketID = listOfFlightTickets.get(0).getTicketId();
+			ticketID++;
+			transaction.commit();
 
 			return ticketID;
 		}
@@ -84,42 +78,26 @@ public class FlightTicketDatabase {
 		return ticketID;
 	}
 
+	@SuppressWarnings("unchecked")
 	public ArrayList<FlightTicket> fetchDatabaseContent() { // mechanism for fetching content from database and
 															// returning as ArrayList
 
 		ArrayList<FlightTicket> flightTickets = new ArrayList<>();
-
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			Statement stmt = conn.createStatement();
-			ResultSet rset = stmt.executeQuery(statementToDisplayDataOfFlightTickets);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-			flightTickets.clear();
-			while (rset.next()) {
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-				Calendar cal = Calendar.getInstance();
-				Timestamp timestamp = rset.getTimestamp("date_of_flight");
-				cal.setTime(timestamp);
+			Transaction transaction = session.beginTransaction();
+			flightTickets = (ArrayList<FlightTicket>) session.createQuery("From FlightTicket").list();
+			transaction.commit();
 
-				// check if airline is not null (may be deleted)
-				if (airlinems.getAirlineFromAirlineID(rset.getInt("airline")) != null
-						&& airportms.getAirportFromAirportId(rset.getInt("departure_airport")) != null
-						&& airportms.getAirportFromAirportId(rset.getInt("destination_airport")) != null) {
+			return flightTickets;
 
-					FlightTicket flightTicket = new FlightTicket(rset.getInt("flight_ID"),
-							airlinems.getAirlineFromAirlineID(rset.getInt("airline")),
-							airportms.getAirportFromAirportId(rset.getInt("departure_airport")),
-							airportms.getAirportFromAirportId(rset.getInt("destination_airport")),
-							rset.getString("flight_class"), cal, rset.getString("seat_row").charAt(0),
-							rset.getInt("seat_number"), rset.getDouble("flight_price"), rset.getString("buyers_name"));
-
-					flightTickets.add(flightTicket);
-					System.out.println(flightTickets);
-				}
-			}
-			conn.close();
 		}
 
 		catch (Exception e) {
@@ -129,60 +107,68 @@ public class FlightTicketDatabase {
 
 		return flightTickets;
 	}
+/*
+	public void updateDatabaseContent(int flightID, String airline, String
+	  departureAirport, String destinationAirport, String flightclass, Calendar
+	  dateOfFlight, char seatRow, int seatNumber, double flightPrice, String
+	  buyersName) {
+	  
+	  Timestamp timestamp = new Timestamp(dateOfFlight.getTimeInMillis());
+	  
+	  try {
+	  
+		  Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-	public void updateDatabaseContent(int flightID, String airline, String departureAirport,
-			String destinationAirport, String flightclass, Calendar dateOfFlight, char seatRow, int seatNumber,
-			double flightPrice, String buyersName) {
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-		Timestamp timestamp = new Timestamp(dateOfFlight.getTimeInMillis());
+			Transaction transaction = session.beginTransaction();
+			Query query = session.createQuery(buyersName)
+			transaction.commit();
+			
+	  DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+	  Connection conn = dbConnection.getConnection(); PreparedStatement
+	  preparedStmt = conn.prepareStatement(statementToUpdateFlightTicketsData);
+	  
+	  preparedStmt.setInt(1,airlinems.getAirlineIdFromAirline(airlinems.getAirlineFromCodename(airline)))
+	  ; // update // Airline_Codename // column preparedStmt.setInt(2,
+	  airportms.getAirportIdFromAirport(airportms.getAirportFromCodename(
+	  departureAirport))); // update // Airport_Codename // column
+	  preparedStmt.setInt(3,
+	  airportms.getAirportIdFromAirport(airportms.getAirportFromCodename(
+	  destinationAirport))); // update // Destination_Airport // column
+	  preparedStmt.setString(4, flightclass); // update Flight_class column
+	  preparedStmt.setTimestamp(5, timestamp); // preparedStmt.setDouble(6,
+	  flightPrice); // update flight_price preparedStmt.setInt(7, flightID); //
+	  where FlightID preparedStmt.setString(8, String.valueOf(seatRow)); // update
+	  seatRow column preparedStmt.setInt(9, seatNumber); // update seatNumber
+	  column preparedStmt.setString(10, buyersName);
+	  
+	  preparedStmt.executeUpdate();
+	  
+	  conn.close(); preparedStmt.close(); }
+	  
+	  catch (Exception ex) { ex.printStackTrace(); }
+	 
+	 }
+*/
+	public void updateDatabaseContent(FlightTicket ticket) {
 
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToUpdateFlightTicketsData);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-			preparedStmt.setInt(1, airlinems.getAirlineIdFromAirline(airlinems.getAirlineFromCodename(airline))); // update Airline_Codename column
-			preparedStmt.setInt(2, airportms.getAirportIdFromAirport(airportms.getAirportFromCodename(departureAirport))); // update Airport_Codename column
-			preparedStmt.setInt(3, airportms.getAirportIdFromAirport(airportms.getAirportFromCodename(destinationAirport))); // update Destination_Airport column
-			preparedStmt.setString(4, flightclass); // update Flight_class column
-			preparedStmt.setTimestamp(5, timestamp); //
-			preparedStmt.setDouble(6, flightPrice); // update flight_price
-			preparedStmt.setInt(7, flightID); // where FlightID
-			preparedStmt.setString(8, String.valueOf(seatRow)); // update seatRow column
-			preparedStmt.setInt(9, seatNumber); // update seatNumber column
-			preparedStmt.setString(10, buyersName);
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			preparedStmt.executeUpdate();
+			Transaction transaction = session.beginTransaction();
+			session.update(ticket);
+			transaction.commit();
 
-			conn.close();
-			preparedStmt.close();
-		}
-
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-	}
-
-	public void deleteContentFromDatabase(int flightID, char seatRow, int seatNumber) { // deleting from database
-																							// content found using
-																							// flight_ID as it
-		// is unique
-
-		try {
-
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToDeleteDataFromFlightTickets);
-
-			preparedStmt.setInt(1, flightID);
-			preparedStmt.setString(2, String.valueOf(seatRow));
-			preparedStmt.setInt(3, seatNumber);
-			preparedStmt.executeUpdate();
-
-			conn.close();
-			preparedStmt.close();
 		}
 
 		catch (Exception e) {
@@ -191,27 +177,96 @@ public class FlightTicketDatabase {
 
 	}
 
-	public void deleteAllContentFromDatabaseRelatedToSpecificFlight(int flight_ID) { // deleting from database content
-																						// found using flight_ID as it
-		// is unique
+	public void deleteContentFromDatabase(int flightID, char seatRow, int seatNumber) {
+
+	}
+
+	public void deleteContentFromDatabase(FlightTicket ticket) {
 
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn
-					.prepareStatement(statementToDeleteAllDataFromFlightTicketsRelatedToSpecificFlight);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-			preparedStmt.setInt(1, flight_ID);
-			preparedStmt.executeUpdate();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			conn.close();
-			preparedStmt.close();
+			Transaction transaction = session.beginTransaction();
+			session.delete(ticket);
+			transaction.commit();
+
 		}
 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void deleteAllContentFromDatabaseRelatedToSpecificFlight(int flight_ID) {
+
+		try {
+
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+
+			Transaction transaction = session.beginTransaction();
+			Query query = session.createQuery("Delete from FlightTicket where flight_id = ?");
+			query.setInteger(1, flight_ID);
+			query.executeUpdate();
+			transaction.commit();
+
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public FlightTicket getFlightTicketFromTicketId(int ticketId) {
+
+		FlightTicket ticket = null;
+		try {
+			ArrayList<FlightTicket> listOfTickets = fetchDatabaseContent();
+
+			for (int i = 0; i < listOfTickets.size(); i++) {
+				if (listOfTickets.get(i).getTicketId() == ticketId) {
+					ticket = listOfTickets.get(i);
+					return ticket;
+				}
+			}
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ticket;
+	}
+
+	public FlightTicket getFlightTicketFromTicketData(int flightId, char seatRow, int seatNumber) {
+
+		FlightTicket ticket = null;
+		try {
+			ArrayList<FlightTicket> listOfTickets = fetchDatabaseContent();
+
+			for (int i = 0; i < listOfTickets.size(); i++) {
+				if (listOfTickets.get(i).getFlightId() == flightId && listOfTickets.get(i).getSeatRow() == seatRow
+						&& listOfTickets.get(i).getSeatNumber() == seatNumber) {
+					ticket = listOfTickets.get(i);
+					return ticket;
+				}
+			}
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ticket;
 	}
 }

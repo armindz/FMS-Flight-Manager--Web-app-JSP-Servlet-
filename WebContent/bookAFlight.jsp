@@ -243,10 +243,6 @@ String strDate= formatter.format(date);
 							
 						%>
 
-
-
-
-
 					<td>
 						<% 	 if(bft.isSeatAvailable(listOfSeats.get(i).getFlightId(),listOfSeats.get(i).getSeatRow(), listOfSeats.get(i).getSeatNumber())){ %>
 						<img id="seatIcon"
@@ -268,7 +264,6 @@ String strDate= formatter.format(date);
 								
 								
 								%>
-
 				</tr>
 
 

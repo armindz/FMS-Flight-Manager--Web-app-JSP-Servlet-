@@ -5,48 +5,42 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import org.hibernate.Transaction;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
+
 import management.AirlineManagementSystem;
 import management.AirportManagementSystem;
+import models.Airline;
 import models.Airport;
 import models.Flight;
+import models.FlightTicket;
 
 public class FlightDatabase {
 
-	private static String statementToStoreDataIntoFlights = "INSERT INTO flights"
-			+ "(flight_ID, airline, departure_airport, destination_airport, flight_class, date_of_flight, seat_row, seat_number, flight_price) values "
-			+ " (?,?,?,?,?,?,?,?,?);";
-	private static String statementToDisplayDataOfFlights = "SELECT * FROM flights";
-	private static String statementToUpdateFlightsData = "UPDATE flights set airline= ?, departure_airport= ?, destination_airport = ?, flight_class = ?, "
-			+ "date_of_flight = ?, seat_row = ?, seat_number = ?, flight_price= ? where flight_ID= ?";
-	private static String statementToDeleteDataFromFlights = "DELETE from flights where flight_ID=?";
-	final String STATEMENT_IF_CODENAME_IS_NULL = "NOT AVAILABLE";
 	AirlineManagementSystem airlinems = new AirlineManagementSystem();
 	AirportManagementSystem airportms = new AirportManagementSystem();
 
 	public void storeToDatabase(Flight flight) {
 
 		try {
-			
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToStoreDataIntoFlights);
 
-			preparedStmt.setInt(1, flight.getFlight_id()); // Flight_ID Column
-			preparedStmt.setInt(2, airlinems.getAirlineIdFromAirline(flight.getAirline())); // AirlineCodename Column
-			preparedStmt.setInt(3, airportms.getAirportIdFromAirport(flight.getAirport())); // AirportCodename Column
-			preparedStmt.setInt(4, airportms.getAirportIdFromAirport(flight.getDestinationAirport())); // Destination Airport
-																							
-			preparedStmt.setString(5, flight.getFlightClass()); // Flight_Class Column
-			preparedStmt.setTimestamp(6, flight.getDateOfFlightInDateTime(flight.getDateOfFlight())); // Date_OF_Flight
-																										// Column
-			preparedStmt.setString(7, String.valueOf(flight.getSeatRow())); // SeatRow Column
-			preparedStmt.setInt(8, flight.getSeatNumber()); // Seat_Number Column
-			preparedStmt.setDouble(9, flight.getFlightPrice()); // Flight_Price Column
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Flight.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-			preparedStmt.execute();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			// conn.close();
-			// preparedStmt.close();
+			Transaction transaction = session.beginTransaction();
+
+			session.save(flight);
+			transaction.commit();
 
 		}
 
@@ -56,70 +50,59 @@ public class FlightDatabase {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public static int generateFlightId() { // mechanism for generating flight ID based on last stored ID in database
 
 		int flightID = 0;
+		ArrayList<Flight> listOfFlights = new ArrayList<>();
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(statementToDisplayDataOfFlights);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Flight.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-			while (rs.next()) {
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-				if (rs.isLast()) {
-					flightID = rs.getInt(1);
-					flightID++;
-				}
-			}
+			Transaction transaction = session.beginTransaction();
+			listOfFlights = (ArrayList<Flight>) session.createQuery("from Flight order by flight_id desc limit 1")
+					.list();
+			flightID = listOfFlights.get(0).getFlightId();
+			flightID++;
+
+			transaction.commit();
 
 			return flightID;
-		}
 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return 0;
+		return flightID;
 	}
 
+	@SuppressWarnings("unchecked")
 	public ArrayList<Flight> fetchDatabaseContent() { // mechanism for fetching content from database and returning as
 														// ArrayList
-
-		ArrayList<Flight> flights = new ArrayList<>();
+		ArrayList<Flight> listOfFlights = new ArrayList<>();
 
 		try {
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			Statement stmt = conn.createStatement();
-			ResultSet rset = stmt.executeQuery(statementToDisplayDataOfFlights);
 
-			flights.clear();
-			while (rset.next()) {
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Flight.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-				Calendar cal = Calendar.getInstance();
-				Timestamp timestamp = rset.getTimestamp("date_of_flight");
-				cal.setTime(timestamp);
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-				if (airlinems.getAirlineFromAirlineID(rset.getInt("airline")) != null
-						&& airportms.getAirportFromAirportId(rset.getInt("departure_airport")) != null
-						&& airportms.getAirportFromAirportId(rset.getInt("destination_airport")) != null) {
+			Transaction transaction = session.beginTransaction();
+			listOfFlights = (ArrayList<Flight>) session.createQuery("from Flight").list();
 
-					Flight flight = new Flight(rset.getInt("flight_ID"),
-							airlinems.getAirlineFromAirlineID(rset.getInt("airline")),
-							airportms.getAirportFromAirportId(rset.getInt("departure_airport")),
-							airportms.getAirportFromAirportId(rset.getInt("destination_airport")),
-							rset.getString("flight_class"), cal, rset.getString("seat_row").charAt(0),
-							rset.getInt("seat_number"), rset.getDouble("flight_price"));
+			transaction.commit();
 
-					flights.add(flight);
-					System.out.println(flight);
-
-				}
-			}
-
-			return flights;
+			return listOfFlights;
 		}
 
 		catch (Exception e) {
@@ -127,35 +110,28 @@ public class FlightDatabase {
 			e.printStackTrace();
 		}
 
-		return flights;
+		return listOfFlights;
 	}
 
-	public void updateDatabaseContent(int FlightID, String airline, String departureAirport,
-			String destinationAirport, String Flightclass, Calendar Date_of_flight, char seatRow, int seatNumber,
-			double flight_Price) {
+	public void updateDatabaseContent(int FlightID, String airline, String departureAirport, String destinationAirport,
+			String Flightclass, Calendar Date_of_flight, char seatRow, int seatNumber, double flight_Price) {
 
 		Timestamp timestamp = new Timestamp(Date_of_flight.getTimeInMillis());
-
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToUpdateFlightsData);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-			preparedStmt.setInt(1, airlinems.getAirlineIdFromAirline(airlinems.getAirlineFromCodename(airline))); // update Airline_Codename column
-			preparedStmt.setInt(2, airportms.getAirportIdFromAirport(airportms.getAirportFromCodename(departureAirport))); // update Airport_Codename column
-			preparedStmt.setInt(3, airportms.getAirportIdFromAirport(airportms.getAirportFromCodename(destinationAirport))); // update Destination_Airport column
-			preparedStmt.setString(4, Flightclass); // update Flight_class column
-			preparedStmt.setTimestamp(5, timestamp); //
-			preparedStmt.setString(6, String.valueOf(seatRow)); // update seatRow column
-			preparedStmt.setInt(7, seatNumber); // update seatNumber column
-			preparedStmt.setDouble(8, flight_Price); // update flight_price
-			preparedStmt.setInt(9, FlightID); // where FlightID
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			preparedStmt.executeUpdate();
-
-			conn.close();
-			preparedStmt.close();
+			Transaction transaction = session.beginTransaction();
+			Query query = session.createQuery(
+					"Update Flight set airline=? AND departure_airport=? AND destination_airport=? AND flight_class=? "
+					+ "AND date_of_flight=? AND seat_row=? AND seat_number=? AND flight_price WHERE flight_id=?");
+			
+			transaction.commit();
 		}
 
 		catch (Exception ex) {
@@ -164,20 +140,23 @@ public class FlightDatabase {
 
 	}
 
-	public void deleteContentFromDatabase(int flight_ID) { // deleting from database content found using flight_ID as it
-															// is unique
+	public void updateDatabaseContent(Flight flight) {
 
 		try {
 
-			DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement preparedStmt = conn.prepareStatement(statementToDeleteDataFromFlights);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Flight.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 
-			preparedStmt.setInt(1, flight_ID);
-			preparedStmt.executeUpdate();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
 
-			conn.close();
-			preparedStmt.close();
+			Transaction transaction = session.beginTransaction();
+
+			session.update(flight);
+			transaction.commit();
+
 		}
 
 		catch (Exception e) {
@@ -185,7 +164,61 @@ public class FlightDatabase {
 		}
 
 	}
-	
 
+	public void deleteContentFromDatabase(Flight flight) {
+
+		try {
+
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(Flight.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+
+			Transaction transaction = session.beginTransaction();
+
+			session.delete(flight);
+			transaction.commit();
+
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void deleteContentFromDatabase(int flightId) { // deleting from database content found using flight_ID as it
+															// is unique
+
+		try {
+			deleteContentFromDatabase(getFlightByFlightId(flightId));
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Flight getFlightByFlightId(int flightId) {
+
+		Flight flight = null;
+		try {
+			ArrayList<Flight> listOfFlights = fetchDatabaseContent();
+
+			for (int i = 0; i < listOfFlights.size(); i++) {
+
+				if (listOfFlights.get(i).getFlightId() == flightId) {
+					flight = listOfFlights.get(i);
+					return flight;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return flight;
+	}
 
 }

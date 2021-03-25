@@ -17,7 +17,7 @@ import models.Airline;
 public class AirlineDatabase {
 
 
-	public void storeToDatabase(Airline airline) throws SQLException {
+	public void storeToDatabase(Airline airline) {
 
 		try {
 

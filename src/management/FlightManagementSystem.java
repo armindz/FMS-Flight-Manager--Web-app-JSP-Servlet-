@@ -70,7 +70,7 @@ public class FlightManagementSystem {
 			for (int j = 1; j <= numberOfSeatsPerRow; j++) {
 
 				char seatRows = (char) i;
-				Seat seat = new Seat(flight.getFlight_id(), seatRows, j, true);
+				Seat seat = new Seat(seatdb.generateSeatId(), flight.getFlightId(), seatRows, j, true);
 
 				flight.addToListOfSeats(seat);
 				addSeatToDatabase(seat);
@@ -165,10 +165,10 @@ public class FlightManagementSystem {
 
 		for (int i = 0; i < listOfFlights.size(); i++) {
 
-			int flightIDFromList = listOfFlights.get(i).getFlight_id();
+			int flightIDFromList = listOfFlights.get(i).getFlightId();
 
 			if (flightID == flightIDFromList) {
-				Flight flight = new Flight(listOfFlights.get(i).getFlight_id(), listOfFlights.get(i).getAirline(),
+				Flight flight = new Flight(listOfFlights.get(i).getFlightId(), listOfFlights.get(i).getAirline(),
 						listOfFlights.get(i).getAirport(), listOfFlights.get(i).getDestinationAirport(),
 						listOfFlights.get(i).getFlightClass(), listOfFlights.get(i).getDateOfFlight(),
 						listOfFlights.get(i).getSeatRow(), listOfFlights.get(i).getSeatNumber(),
@@ -197,7 +197,7 @@ public class FlightManagementSystem {
 					&& flight.getSeatNumber() == flightFromList.getSeatNumber()
 					&& flight.getSeatRow() == (flightFromList.getSeatRow())) {
 
-				return flightFromList.getFlight_id();
+				return flightFromList.getFlightId();
 			}
 		}
 			return 0;
@@ -222,7 +222,7 @@ public class FlightManagementSystem {
 					&& seatNumber == flightFromList.getSeatNumber()
 					&& flightSeatRows == (flightFromList.getSeatRow())) {
 
-				return flightFromList.getFlight_id();
+				return flightFromList.getFlightId();
 			}
 		}
 		return 0;

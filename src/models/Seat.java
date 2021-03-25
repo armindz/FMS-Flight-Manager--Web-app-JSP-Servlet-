@@ -9,8 +9,8 @@ import javax.persistence.Table;
 @Table(name="seats")
 public class Seat {
 	
-	@Column(name="seat_id")
 	@Id
+	@Column(name="seat_id")
 	private int seatId;
 	@Column (name="flight_id")
 	private int flightId;
@@ -22,14 +22,18 @@ public class Seat {
 	private boolean isSeatAvailable = true;
 
 
-public Seat (int flightId, char seatRow, int seatNumber, boolean isSeatAvailable) {
+public Seat (int seatId, int flightId, char seatRow, int seatNumber, boolean isSeatAvailable) {
 	
+	this.seatId = seatId;
 	this.flightId = flightId;
 	this.seatRow = seatRow;
 	this.seatNumber = seatNumber;
 	this.isSeatAvailable = isSeatAvailable;
 }
 
+public Seat () {
+	
+}
 public int getSeatId() {
 	return seatId;
 }

@@ -171,7 +171,7 @@ public class AirportDatabase {
 			Session session = sessionFactory.openSession();
 
 			Transaction transaction = session.beginTransaction();
-			listOfAirports = session.createQuery("from Airport order by airport_id desc limit1").list();
+			listOfAirports = session.createQuery("from Airport order by airport_id desc limit 1").list();
 			airportID = listOfAirports.get(0).getAirportID();
 			airportID++;
 			transaction.commit();

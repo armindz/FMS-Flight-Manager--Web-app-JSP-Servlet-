@@ -48,7 +48,7 @@ public class BookAFlight extends HttpServlet {
 				// if( flightID.equals(request.getParameter("flightID"))) {
 				if (flightID.equals(request.getParameter("product_id"))) {
 
-					Flight flight = new Flight(flightDataList.get(i).getFlight_id(), flightDataList.get(i).getAirline(),
+					Flight flight = new Flight(flightDataList.get(i).getFlightId(), flightDataList.get(i).getAirline(),
 							flightDataList.get(i).getAirport(), flightDataList.get(i).getDestinationAirport(),
 							flightDataList.get(i).getFlightClass(), flightDataList.get(i).getDateOfFlight(),
 							flightDataList.get(i).getSeatRow(), flightDataList.get(i).getSeatNumber(),

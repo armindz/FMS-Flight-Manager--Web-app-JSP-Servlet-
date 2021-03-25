@@ -2,14 +2,11 @@ package booking;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import database.FlightTicketDatabase;
 import database.SeatDatabase;
 
 import management.FlightManagementSystem;
-import models.Airline;
-import models.Airport;
 import models.Flight;
 import models.FlightTicket;
 import models.Seat;
@@ -29,7 +26,7 @@ public class BookingFlightTicket {
 			if (isSeatAvailable(flightId, seatRow, seatNumber)) {
 				
 				Flight flight = flightms.getFlightFromFlightID(flightId);
-				FlightTicket flightTicket = new FlightTicket(flightId, flight.getAirline(), flight.getAirport(),
+				FlightTicket flightTicket = new FlightTicket(flightTicketdb.generateTicketId(), flightId, flight.getAirline(), flight.getAirport(),
 						flight.getDestinationAirport(), flight.getFlightClass(), flight.getDateOfFlight(), seatRow,
 						seatNumber, flight.getFlightPrice(), buyers_Name);
 				addFlightTicketToDatabase(flightTicket);

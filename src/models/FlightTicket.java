@@ -3,22 +3,48 @@ package models;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+@Entity
+@Table (name="flight_tickets")
 public class FlightTicket {
 	
-	
+	@Id
+	@Column (name="ticket_id")
+	private int ticketId;
+	@Column (name="flight_id")
 	private int flightId;
+	@OneToOne
+	@JoinColumn (name="airline", referencedColumnName="airline_id")
 	private Airline airline;
+	@OneToOne
+	@JoinColumn (name="departure_airport", referencedColumnName="airport_id")
 	private Airport airport;
+	@OneToOne
+	@JoinColumn (name="destination_airport", referencedColumnName="airport_id")
 	private Airport destinationAirport;
+	@Column (name="flight_class")
 	private String flightClass;
+	@Column (name="date_of_flight")
 	private Calendar dateOfFlight;
+	@Column (name="seat_row")
 	private char seatRow;
+	@Column (name="seat_number")
 	private int seatNumber;
+	@Column (name="flight_price")
 	private double flightPrice;
+	@Column (name="buyers_name")
 	private String buyersName;
 	
-	
-	public FlightTicket (int flightId, Airline airline, Airport airport, Airport destinationAirport, String flightClass, Calendar dateOfFlight, char seatRow, int seatNumber, double flightPrice, String buyersName) {
+
+
+	public FlightTicket (int ticketId, int flightId, Airline airline, Airport airport, Airport destinationAirport, String flightClass, Calendar dateOfFlight, char seatRow, int seatNumber, double flightPrice, String buyersName) {
+		
+		this.ticketId = ticketId;
 		this.flightId = flightId;
 		this.airline = airline;
 		this.airport = airport;
@@ -31,7 +57,19 @@ public class FlightTicket {
 		this.buyersName = buyersName;
 		
 	}
+	
+	public FlightTicket () {
+		
+	}
 
+	public int getTicketId() {
+		return ticketId;
+	}
+
+
+	public void setTicketId(int ticketId) {
+		this.ticketId = ticketId;
+	}
 
 	public int getFlightId() {
 		return flightId;
