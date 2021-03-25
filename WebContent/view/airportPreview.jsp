@@ -27,45 +27,39 @@
 
 
 
-	  <header>
+	<header>
 
-        <a href="../index.html"> <img id="logo" src="img/icons/fms transparent.png"></a>
-        <div class="navbarsections">
-            <div class="dropdown">
-                <button class="dropbtn">Create &#11206;</button>
-                <div class="dropdown-content">
-                    <a href="form/airlineForm.html">Airline</a>
-                    <a href="form/airportForm.html">Airport</a>
-                    <a href="form/flightForm.jsp">Flight</a>
-                </div>
-            </div>
+		<a href="index.html"> <img id="logo"
+			src="img/icons/fms transparent.png"></a>
+		<div class="navbarsections">
+			<div class="dropdown">
+			<a href="../list/airlineList.jsp">	<button class="dropbtn">Airline</button></a>
+				
+			</div>
 
-            <div class="dropdown">
-                <button class="dropbtn">List &#11206;</button>
-                <div class="dropdown-content">
-                    <a href="list/airlineList.jsp">Airline</a>
-                    <a href="list/airportList.jsp">Airport</a>
-                    <a href="list/flightList.jsp">Flight</a>
-                </div>
-            </div>
+			<div class="dropdown">
+				<a href="../list/airportList.jsp"><button class="dropbtn">Airport</button></a>
+			</div>
 
 
-            <div class="dropdown">
-                <button class="dropbtn">Modify &#11206;</button>
-                <div class="dropdown-content">
-                    <a href="#">Airline</a>
-                    <a href="#">Airport</a>
-                    <a href="#">Flight</a>
-                </div>
-            </div>
+			<div class="dropdown">
+				<a href="../list/flightList.jsp"><button class="dropbtn">Flight</button></a>
+				
+			</div>
+			
+			<div class="dropdown">
+				<a href="../list/flightList.jsp"><button class="dropbtn">Book a flight</button></a>
+				
+			</div>
 
-			 <a id="settingsButton" href="../settings.jsp"> <img  src="../img/icons/settingsIcon.ico"></a>
-			 
-            <form class="logoutButton" action="LogoutServlet" method="GET">
-                <button class="logoutbtn">Log out!</button>
-            </form>
-        </div>
-    </header>
+			<a id="settingsButton" href="../settings.jsp"> <img
+				src="../img/icons/settingsIcon.ico"></a>
+
+			<form class="logoutButton" action="LogoutServlet" method="GET">
+				<button class="logoutbtn">Log out!</button>
+			</form>
+		</div>
+	</header>
 	<%
 	Airport airport = (Airport) request.getAttribute("airportData");
 	%>
@@ -98,13 +92,12 @@
 			<%!FlightManagementSystem flightms = new FlightManagementSystem();%>
 
 
-			<h4> DEPARTURES </h4>
+			<h4>DEPARTURES</h4>
 			<table class="flightListTable" style="width: 100%">
-			
-			
+
+
 				<tr>
 
-					<th>Flight ID</th>
 					<th>Airline</th>
 					<th>Airport</th>
 					<th>Destination Airport</th>
@@ -127,16 +120,7 @@
 							if (fetchDataToList.get(i).getAirport().getAirportCodename().equals(airport.getAirportCodename())) {
 					%>
 
-					<td>
-						<form id="viewFlightID" action="BookAFlight" method="GET"
-							name="vievFlightId">
-							<input type="hidden" name="product_id"
-								value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
-								type="submit" name="view"
-								value="<%=fetchDataToList.get(i).getFlight_id()%>" />
-						</form>
-
-					</td>
+					
 					<td>
 						<form id="airlineFromList" action="AirlinePreviewServlet"
 							method="GET" name="airlineFromList">
@@ -180,19 +164,19 @@
 							<form id="remove" action="FlightRemoveServlet" method="GET"
 								name="removeid">
 								<input type="hidden" name="product_id"
-									value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
-									type="submit" name="remove" value="Remove" />
+									value="<%=fetchDataToList.get(i).getFlightId()%>" /> <input
+									type="submit" name="remove" value="Delete" />
 							</form>
 							<form id="update" action="FlightUpdateServlet" method="GET"
 								name="updateid">
 								<input type="hidden" name="product_id"
-									value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
-									type="submit" name="update" value="Update" />
+									value="<%=fetchDataToList.get(i).getFlightId()%>" /> <input
+									type="submit" name="update" value="Edit" />
 							</form>
 							<form id="viewFlight" action="BookAFlight" method="GET"
 								name="vievFlightId">
 								<input type="hidden" name="product_id"
-									value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
+									value="<%=fetchDataToList.get(i).getFlightId()%>" /> <input
 									type="submit" name="view" value="View" />
 
 							</form>
@@ -215,13 +199,13 @@
 
 
 
-	
+
 			</table>
-<h4> ARRIVALS </h4>
-<table class="flightListTable" style="width: 100%">
+			<h4>ARRIVALS</h4>
+			<table class="flightListTable" style="width: 100%">
 				<tr>
 
-					<th>Flight ID</th>
+				
 					<th>Airline</th>
 					<th>Airport</th>
 					<th>Destination Airport</th>
@@ -244,16 +228,7 @@
 							if (fetchDataToList.get(i).getDestinationAirport().getAirportCodename().equals(airport.getAirportCodename())) {
 					%>
 
-					<td>
-						<form id="viewFlightID" action="BookAFlight" method="GET"
-							name="vievFlightId">
-							<input type="hidden" name="product_id"
-								value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
-								type="submit" name="view"
-								value="<%=fetchDataToList.get(i).getFlight_id()%>" />
-						</form>
-
-					</td>
+					
 					<td>
 						<form id="airlineFromList" action="AirlinePreviewServlet"
 							method="GET" name="airlineFromList">
@@ -297,19 +272,19 @@
 							<form id="remove" action="FlightRemoveServlet" method="GET"
 								name="removeid">
 								<input type="hidden" name="product_id"
-									value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
-									type="submit" name="remove" value="Remove" />
+									value="<%=fetchDataToList.get(i).getFlightId()%>" /> <input
+									type="submit" name="remove" value="Delete" />
 							</form>
 							<form id="update" action="FlightUpdateServlet" method="GET"
 								name="updateid">
 								<input type="hidden" name="product_id"
-									value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
-									type="submit" name="update" value="Update" />
+									value="<%=fetchDataToList.get(i).getFlightId()%>" /> <input
+									type="submit" name="update" value="Edit" />
 							</form>
 							<form id="viewFlight" action="BookAFlight" method="GET"
 								name="vievFlightId">
 								<input type="hidden" name="product_id"
-									value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
+									value="<%=fetchDataToList.get(i).getFlightId()%>" /> <input
 									type="submit" name="view" value="View" />
 
 							</form>

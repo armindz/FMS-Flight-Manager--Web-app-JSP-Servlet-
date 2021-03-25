@@ -97,6 +97,7 @@
     /* Change color of dropdown links on hover */
     
     .dropdown-content a:hover {
+    
         color: grey;
         transition: .2s ease-out;
     }
@@ -109,6 +110,8 @@
     
     .dropdown:hover .dropbtn {
         color: grey;
+        border-bottom: 2px powderblue solid ;
+       
     }
     /* End of dropdown button */
     /* Navbar sections (Create, List, Modify, Book) at center of header */

@@ -14,9 +14,9 @@ import javax.persistence.Table;
 public class FlightTicket {
 	
 	@Id
-	@Column (name="ticket_id")
+	@Column (name="ticket_ID")
 	private int ticketId;
-	@Column (name="flight_id")
+	@Column (name="flight_ID")
 	private int flightId;
 	@OneToOne
 	@JoinColumn (name="airline", referencedColumnName="airline_id")

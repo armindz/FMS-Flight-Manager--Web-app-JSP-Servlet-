@@ -89,6 +89,7 @@ public class BookingFlightTicket {
 
 	public void removeFlightTicketFromDatabase(int flight_ID, char seatRow, int seatNumber) { // delete flight ticket and mark seat as available
 		
+		
 		flightTicketdb.deleteContentFromDatabase(flight_ID, seatRow, seatNumber);
 		flightms.markSeatAsAvailable(flight_ID, seatRow, seatNumber);
 

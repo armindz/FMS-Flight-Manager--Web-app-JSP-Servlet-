@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import management.UserManagementSystem;
 
 
-@WebServlet(name = "/UserAddServlet", urlPatterns = {"/user-add"})
+@WebServlet("/UserAddServlet")
 public class UserAddServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -55,7 +55,7 @@ public class UserAddServlet extends HttpServlet {
 			 PrintWriter out = response.getWriter();  
 			 out.println("<html>");
 			 out.println("<body>");
-			 out.println("<p>Operation couldn't be completed. Seat may be reserved!</p>");
+			 out.println("<p>Operation couldn't be completed. </p>");
 			 out.println("</body>");
 			 out.println("</html>");
 		}

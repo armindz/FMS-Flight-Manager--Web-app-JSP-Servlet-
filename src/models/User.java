@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Table (name="users")
 public class User {
 
-	@Column(name="user_id")
+	@Column(name="user_ID")
 	@Id
 	private int userID;
 	@Column(name="username")
@@ -25,6 +25,9 @@ public class User {
 
 	
 
+	public User () {
+		
+	}
 	public String getUsername() {
 		return username;
 	}

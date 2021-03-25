@@ -27,7 +27,7 @@ public class Flight {
 	private ArrayList<Seat> listOfSeats = new ArrayList<Seat>();
 
 	@Id
-	@Column(name = "flight_id")
+	@Column(name = "flight_ID")
 	private int flightId;
 
 	@OneToOne

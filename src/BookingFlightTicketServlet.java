@@ -52,9 +52,9 @@ public class BookingFlightTicketServlet extends HttpServlet {
 			// convert request Strings to int and char
 
 			int flightID = Integer.parseInt(request.getParameter("flightID"));
-			char seatRow = request.getParameter("seatRow").charAt(0);
+			char seatRow = request.getParameter("seatRow").toUpperCase().charAt(0);
 			int seatNumber = Integer.valueOf(request.getParameter("seatNumber"));
-			String buyersName = request.getParameter("name");
+			String buyersName = request.getParameter("name").toUpperCase();
 
 			BookingFlightTicket bft = new BookingFlightTicket();
 
@@ -69,9 +69,9 @@ public class BookingFlightTicketServlet extends HttpServlet {
 	protected void requestDispatcher(HttpServletRequest request, HttpServletResponse response) {
 		
 		int flightID = Integer.parseInt(request.getParameter("flightID"));
-		char seatRow = request.getParameter("seatRow").charAt(0);
+		char seatRow = request.getParameter("seatRow").toUpperCase().charAt(0);
 		int seatNumber = Integer.valueOf(request.getParameter("seatNumber"));
-		String buyersName = request.getParameter("name");
+		String buyersName = request.getParameter("name").toUpperCase();
 		
 		FlightManagementSystem flightms = new FlightManagementSystem();
 		BookingFlightTicket bft = new BookingFlightTicket();

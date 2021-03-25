@@ -15,7 +15,8 @@ import org.hibernate.service.ServiceRegistryBuilder;
 
 import management.AirlineManagementSystem;
 import management.AirportManagementSystem;
-
+import models.Airline;
+import models.Airport;
 import models.FlightTicket;
 
 public class FlightTicketDatabase {
@@ -27,7 +28,7 @@ public class FlightTicketDatabase {
 
 		try {
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -54,7 +55,7 @@ public class FlightTicketDatabase {
 
 			ArrayList<FlightTicket> listOfFlightTickets = new ArrayList<FlightTicket>();
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -85,7 +86,7 @@ public class FlightTicketDatabase {
 		ArrayList<FlightTicket> flightTickets = new ArrayList<>();
 		try {
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -107,58 +108,12 @@ public class FlightTicketDatabase {
 
 		return flightTickets;
 	}
-/*
-	public void updateDatabaseContent(int flightID, String airline, String
-	  departureAirport, String destinationAirport, String flightclass, Calendar
-	  dateOfFlight, char seatRow, int seatNumber, double flightPrice, String
-	  buyersName) {
-	  
-	  Timestamp timestamp = new Timestamp(dateOfFlight.getTimeInMillis());
-	  
-	  try {
-	  
-		  Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
-			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
-					.buildServiceRegistry();
 
-			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
-			Session session = sessionFactory.openSession();
-
-			Transaction transaction = session.beginTransaction();
-			Query query = session.createQuery(buyersName)
-			transaction.commit();
-			
-	  DatabaseConnection dbConnection = DatabaseConnection.getInstance();
-	  Connection conn = dbConnection.getConnection(); PreparedStatement
-	  preparedStmt = conn.prepareStatement(statementToUpdateFlightTicketsData);
-	  
-	  preparedStmt.setInt(1,airlinems.getAirlineIdFromAirline(airlinems.getAirlineFromCodename(airline)))
-	  ; // update // Airline_Codename // column preparedStmt.setInt(2,
-	  airportms.getAirportIdFromAirport(airportms.getAirportFromCodename(
-	  departureAirport))); // update // Airport_Codename // column
-	  preparedStmt.setInt(3,
-	  airportms.getAirportIdFromAirport(airportms.getAirportFromCodename(
-	  destinationAirport))); // update // Destination_Airport // column
-	  preparedStmt.setString(4, flightclass); // update Flight_class column
-	  preparedStmt.setTimestamp(5, timestamp); // preparedStmt.setDouble(6,
-	  flightPrice); // update flight_price preparedStmt.setInt(7, flightID); //
-	  where FlightID preparedStmt.setString(8, String.valueOf(seatRow)); // update
-	  seatRow column preparedStmt.setInt(9, seatNumber); // update seatNumber
-	  column preparedStmt.setString(10, buyersName);
-	  
-	  preparedStmt.executeUpdate();
-	  
-	  conn.close(); preparedStmt.close(); }
-	  
-	  catch (Exception ex) { ex.printStackTrace(); }
-	 
-	 }
-*/
 	public void updateDatabaseContent(FlightTicket ticket) {
 
 		try {
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -178,14 +133,20 @@ public class FlightTicketDatabase {
 	}
 
 	public void deleteContentFromDatabase(int flightID, char seatRow, int seatNumber) {
-
+		
+		try {
+		deleteContentFromDatabase(getFlightTicketFromTicketData(flightID, seatRow, seatNumber));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void deleteContentFromDatabase(FlightTicket ticket) {
 
 		try {
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -208,7 +169,7 @@ public class FlightTicketDatabase {
 
 		try {
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 

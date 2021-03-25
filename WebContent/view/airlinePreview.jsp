@@ -27,45 +27,39 @@
 
 
 
-	  <header>
+	<header>
 
-        <a href="../index.html"> <img id="logo" src="img/icons/fms transparent.png"></a>
-        <div class="navbarsections">
-            <div class="dropdown">
-                <button class="dropbtn">Create &#11206;</button>
-                <div class="dropdown-content">
-                    <a href="form/airlineForm.html">Airline</a>
-                    <a href="form/airportForm.html">Airport</a>
-                    <a href="form/flightForm.jsp">Flight</a>
-                </div>
-            </div>
+		<a href="index.html"> <img id="logo"
+			src="img/icons/fms transparent.png"></a>
+		<div class="navbarsections">
+			<div class="dropdown">
+			<a href="../list/airlineList.jsp">	<button class="dropbtn">Airline</button></a>
+				
+			</div>
 
-            <div class="dropdown">
-                <button class="dropbtn">List &#11206;</button>
-                <div class="dropdown-content">
-                    <a href="list/airlineList.jsp">Airline</a>
-                    <a href="list/airportList.jsp">Airport</a>
-                    <a href="list/flightList.jsp">Flight</a>
-                </div>
-            </div>
+			<div class="dropdown">
+				<a href="../list/airportList.jsp"><button class="dropbtn">Airport</button></a>
+			</div>
 
 
-            <div class="dropdown">
-                <button class="dropbtn">Modify &#11206;</button>
-                <div class="dropdown-content">
-                    <a href="#">Airline</a>
-                    <a href="#">Airport</a>
-                    <a href="#">Flight</a>
-                </div>
-            </div>
+			<div class="dropdown">
+				<a href="../list/flightList.jsp"><button class="dropbtn">Flight</button></a>
+				
+			</div>
+			
+			<div class="dropdown">
+				<a href="../list/flightList.jsp"><button class="dropbtn">Book a flight</button></a>
+				
+			</div>
 
-			 <a id="settingsButton" href="../settings.jsp"> <img  src="../img/icons/settingsIcon.ico"></a>
-			 
-            <form class="logoutButton" action="LogoutServlet" method="GET">
-                <button class="logoutbtn">Log out!</button>
-            </form>
-        </div>
-    </header>
+			<a id="settingsButton" href="../settings.jsp"> <img
+				src="../img/icons/settingsIcon.ico"></a>
+
+			<form class="logoutButton" action="LogoutServlet" method="GET">
+				<button class="logoutbtn">Log out!</button>
+			</form>
+		</div>
+	</header>
 	<%
 	Airline airline = (Airline) request.getAttribute("airlineData");
 	%>
@@ -159,19 +153,19 @@
 							<form id="remove" action="FlightRemoveServlet" method="GET"
 								name="removeid">
 								<input type="hidden" name="product_id"
-									value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
+									value="<%=fetchDataToList.get(i).getFlightId()%>" /> <input
 									type="submit" name="remove" value="Remove" />
 							</form>
 							<form id="update" action="FlightUpdateServlet" method="GET"
 								name="updateid">
 								<input type="hidden" name="product_id"
-									value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
+									value="<%=fetchDataToList.get(i).getFlightId()%>" /> <input
 									type="submit" name="update" value="Update" />
 							</form>
 							<form id="viewFlight" action="BookAFlight" method="GET"
 								name="vievFlightId">
 								<input type="hidden" name="product_id"
-									value="<%=fetchDataToList.get(i).getFlight_id()%>" /> <input
+									value="<%=fetchDataToList.get(i).getFlightId()%>" /> <input
 									type="submit" name="view" value="View" />
 
 							</form>

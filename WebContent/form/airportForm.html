@@ -14,45 +14,39 @@
 <body>
 
 
-    <header>
+   <header>
 
-        <a href="../index.html"> <img id="logo" src="../img/icons/fms transparent.png"></a>
-        <div class="navbarsections">
-            <div class="dropdown">
-                <button class="dropbtn">Create &#11206;</button>
-                <div class="dropdown-content">
-                    <a href="airlineForm.html">Airline</a>
-                    <a href="airportForm.html">Airport</a>
-                    <a href="flightForm.jsp">Flight</a>
-                </div>
-            </div>
+		<a href="../index.html"> <img id="logo"
+			src="../img/icons/fms transparent.png"></a>
+		<div class="navbarsections">
+			<div class="dropdown">
+			<a href="../list/airlineList.jsp">	<button class="dropbtn">Airline</button></a>
+				
+			</div>
 
-            <div class="dropdown">
-                <button class="dropbtn">List &#11206;</button>
-                <div class="dropdown-content">
-                    <a href="../list/airlineList.jsp">Airline</a>
-                    <a href="../list/airportList.jsp">Airport</a>
-                    <a href="../list/flightList.jsp">Flight</a>
-                </div>
-            </div>
+			<div class="dropdown">
+				<a href="../list/airportList.jsp"><button class="dropbtn">Airport</button></a>
+			</div>
 
 
-            <div class="dropdown">
-                <button class="dropbtn">Modify &#11206;</button>
-                <div class="dropdown-content">
-                    <a href="#">Airline</a>
-                    <a href="#">Airport</a>
-                    <a href="#">Flight</a>
-                </div>
-            </div>
+			<div class="dropdown">
+				<a href="../list/flightList.jsp"><button class="dropbtn">Flight</button></a>
+				
+			</div>
+			
+			<div class="dropdown">
+				<a href="../list/flightList.jsp"><button class="dropbtn">Book a flight</button></a>
+				
+			</div>
 
-            <a id="settingsButton" href="../settings.jsp"> <img src="../img/icons/settingsIcon.ico"></a>
+			<a id="settingsButton" href="../settings.jsp"> <img
+				src="../img/icons/settingsIcon.ico"></a>
 
-            <form class="logoutButton" action="../LogoutServlet" method="GET">
-                <button class="logoutbtn">Log out!</button>
-            </form>
-        </div>
-    </header>
+			<form class="logoutButton" action="LogoutServlet" method="GET">
+				<button class="logoutbtn">Log out!</button>
+			</form>
+		</div>
+	</header>
 
 
     <h2 id="formHeading">Airport Creator</h2>

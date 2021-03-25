@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import booking.BookingFlightTicket;
 import database.AirportDatabase;
 import database.FlightDatabase;
 import database.SeatDatabase;
@@ -21,34 +22,16 @@ public class Test {
 		try {
 		SeatDatabase seatdb = new SeatDatabase();
 		FlightManagementSystem flightms = new FlightManagementSystem();
-		ArrayList <Seat> listOfSeats = flightms.getListOfSeats();
 		AirlineManagementSystem airlinems = new AirlineManagementSystem();
 		AirportManagementSystem airportms = new AirportManagementSystem();
 		FlightDatabase flightDb = new FlightDatabase();
-		
+		BookingFlightTicket bft = new BookingFlightTicket();
 		Date date = new Date();
-		
-		
-		System.out.println(flightDb.generateFlightId());
-	
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		
-		Airline airline = airlinems.getAirlineFromAirlineID(0);
-		Airport airport =  airportms.getAirportFromAirportId(2);
-		Airport destinationAirport = airportms.getAirportFromAirportId(0);
-		
-	
-		
-		
-		
-		Flight flight = new Flight(9, airline, airport, destinationAirport, "ECONOMY", cal, 'A', 10, 22.0);
+
+	//	bft.bookAFlight(0, 'A', 1, "ARMIN");
 		//flightDb.storeToDatabase(flight);
-		
-		flightms.createFlight("WZZ"	, "TZZ", "SAK", "Economy", cal, 'A', 5, 13);
-		
-		
+		System.out.println(seatdb.fetchDatabaseContent());
+
 		
 		}
 		catch (Exception e) {

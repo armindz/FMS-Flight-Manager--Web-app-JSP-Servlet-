@@ -62,7 +62,7 @@ public class FlightAddServlet extends HttpServlet {
 		String airportCodename = request.getParameter("airportCodename").toUpperCase();
 		String destinationAirportCodename = request.getParameter("destinationAirportCodename").toUpperCase();
 		String flightClass = request.getParameter("flightClass").toUpperCase();
-		char seatRow = (request.getParameter("seatRow").charAt(0));
+		char seatRow = (request.getParameter("seatRow").toUpperCase().charAt(0));
 		int seatNumber = Integer.parseInt(request.getParameter("seatNumber"));
 		double flightPrice = Double.parseDouble(request.getParameter("flightPrice"));
 

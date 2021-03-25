@@ -36,33 +36,28 @@
 			src="img/icons/fms transparent.png"></a>
 		<div class="navbarsections">
 			<div class="dropdown">
-				<button class="dropbtn">Create &#11206;</button>
-				<div class="dropdown-content">
-					<a href="form/airlineForm.html">Airline</a> 
-					<a href="form/airportForm.html">Airport</a>
-					<a href="form/flightForm.jsp">Flight</a>
-				</div>
+			<a href="list/airlineList.jsp">	<button class="dropbtn">Airline</button></a>
+				
 			</div>
 
 			<div class="dropdown">
-				<button class="dropbtn">List &#11206;</button>
-				<div class="dropdown-content">
-					<a href="list/airlineList.jsp">Airline</a> 
-					<a href="list/airportList.jsp">Airport</a>
-					<a href="list/flightList.jsp">Flight</a>
-				</div>
+				<a href="list/airportList.jsp"><button class="dropbtn">Airport</button></a>
 			</div>
 
 
 			<div class="dropdown">
-				<button class="dropbtn">Modify &#11206;</button>
-				<div class="dropdown-content">
-					<a href="#">Airline</a> <a href="#">Airport</a> <a href="#">Flight</a>
-				</div>
+				<a href="list/flightList.jsp"><button class="dropbtn">Flight</button></a>
+				
 			</div>
 			
-			 <a id="settingsButton" href="settings.jsp"> <img  src="img/icons/settingsIcon.ico"></a>
-			 
+			<div class="dropdown">
+				<a href="list/flightList.jsp"><button class="dropbtn">Book a flight</button></a>
+				
+			</div>
+
+			<a id="settingsButton" href="../settings.jsp"> <img
+				src="../img/icons/settingsIcon.ico"></a>
+
 			<form class="logoutButton" action="LogoutServlet" method="GET">
 				<button class="logoutbtn">Log out!</button>
 			</form>
@@ -95,7 +90,7 @@ String strDate= formatter.format(date);
 				<h5 class="name ">YOUR NAME</h5>
 
 				<label for="flightID ">FLIGHT ID</label>
-				<h5 class="flightID "><%= flight.getFlight_id() %></h5>
+				<h5 class="flightID "><%= flight.getFlightId() %></h5>
 
 				<label for="date ">DATE</label>
 				<h5 class="DATE "><%= formatter.format(flight.getDateOfFlight().getTime()) %></h5>
@@ -153,7 +148,7 @@ String strDate= formatter.format(date);
 			<br />
 			<br />
 			<br /> <label for="flightID ">FLIGHT ID</label>
-			<h5 class="flightID "><%= flight.getFlight_id() %></h5>
+			<h5 class="flightID "><%= flight.getFlightId() %></h5>
 			<label for="flightPrice ">PRICE</label>
 			<h5 class="flightPrice "><%= flight.getFlightPrice() %>
 				KM
@@ -196,15 +191,15 @@ String strDate= formatter.format(date);
 				<select name="flightID" id="flightIdSelect">
 					
 					<% for(int i = 0; i < flightFromList.size(); i++) {
-                			if ( flightFromList.get(i).getFlight_id() == flight.getFlight_id()) {  %>
-								<option value=<%= flight.getFlight_id()%> selected><%= flight.getFlight_id()%> 
+                			if ( flightFromList.get(i).getFlightId() == flight.getFlightId()) {  %>
+								<option value=<%= flight.getFlightId()%> selected><%= flight.getFlightId()%> 
 								<%=flight.getAirport().getAirportCodename()%> 
 								<%=flight.getDestinationAirport().getAirportCodename() %></option>
 							
-                			<% } else { %>
-								<option value=<%= flightFromList.get(i).getFlight_id()%>><%= flightFromList.get(i).getFlight_id()%> 
+                			  <% } else { %>
+							<!--  <option value=<%= flightFromList.get(i).getFlightId()%>><%= flightFromList.get(i).getFlightId()%> 
 								<%= flightFromList.get(i).getAirport().getAirportCodename() %>
-								<%= flightFromList.get(i).getDestinationAirport().getAirportCodename() %></option>
+								<%= flightFromList.get(i).getDestinationAirport().getAirportCodename() %></option>                          -->	
 
 					<% 
                 		}
@@ -214,10 +209,32 @@ String strDate= formatter.format(date);
 				</select>
 				<br> <label for="name">Name:</label><br> <input
 					type="text" name="name" /> <br />
-				<br> <label for="seatRow">SEAT ROW:</label><br> <input
-					type="text" name="seatRow" /> <br />
-				<br /> <label for="seatNumber">SEAT NUMBER:</label><br> <input
-					type="number" name="seatNumber" /> <br />
+				<br> <label for="seatRow">SEAT ROW:</label><br> 
+					<select name="seatRow" id="flightIdSelect"> 
+					
+					<% for(char i = 'A' ; i <= flight.getSeatRow(); i++ ) { %>
+						
+						<option value=<%= i %> > <%= i %></option>
+						
+						
+						<% } %>
+					
+						
+					</select>
+					<br />
+				<br /> <label for="seatNumber">SEAT NUMBER:</label><br> 
+				<select name="seatNumber" id="flightIdSelect">
+				
+				<% for (int i=1; i <= flight.getSeatNumber(); i++) { %>
+				
+				<option value=<%= i %> > <%= i %> </option>
+				
+				
+				<% } %>
+				</select>
+				
+				
+				
 				<br /> <input class="buttonform" type="submit" value="Create" />
 
 			</form>
@@ -238,7 +255,7 @@ String strDate= formatter.format(date);
 					<% 
 					for(int i=0; i < listOfSeats.size();i++) {
 
-						if(listOfSeats.get(i).getFlightId()==flight.getFlight_id()) {
+						if(listOfSeats.get(i).getFlightId()==flight.getFlightId()) {
 					
 							
 						%>
@@ -318,7 +335,7 @@ String strDate= formatter.format(date);
  						ArrayList <FlightTicket> fetchDataToList =  bft.fetchFlightTicketDatabaseContentToList();  
  						for (int i=0; i <=fetchDataToList.size(); i++) 
  						
- 						{   if(fetchDataToList.get(i).getFlightId() == flight.getFlight_id()) {     %>
+ 						{   if(fetchDataToList.get(i).getFlightId() == flight.getFlightId()) {     %>
 
                                           <td>
 						<form id="viewFlightID" action="BookAFlight" method="GET"
