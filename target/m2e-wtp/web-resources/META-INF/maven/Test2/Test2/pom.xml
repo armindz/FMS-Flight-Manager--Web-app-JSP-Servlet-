@@ -37,6 +37,14 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 </properties>
   <dependencies>
+  
+  <dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>3.0.1</version>
+    <scope>provided</scope>
+</dependency>
+
     <dependency>
     <groupId>javax.annotation</groupId>
     <artifactId>javax.annotation-api</artifactId>
