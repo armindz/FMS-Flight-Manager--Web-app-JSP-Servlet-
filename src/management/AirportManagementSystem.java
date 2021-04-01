@@ -17,8 +17,8 @@ public class AirportManagementSystem {
 		try {
 
 			if (isAirportDataUnique(airportCodename) && isAirportCodenameValid(airportCodename)) {
-				Airport airport = new Airport(airportdb.generateAirportId(),airportCodename, airportFullname, airportType, airportCity,
-						airportCountry);
+				Airport airport = new Airport(airportdb.generateAirportId(),airportCodename, 
+						airportFullname, airportType, airportCity, airportCountry);
 				addAirportToDatabase(airport);
 				System.out.println("Airport successfully created!");
 			} else {
@@ -32,29 +32,7 @@ public class AirportManagementSystem {
 
 	}
 
-	public Airport getAirportFromCodename(String airportCodename) {
 
-		List<Airport> listOfAirports = fetchDatabaseContentToList();
-
-		for (int i = 0; i < listOfAirports.size(); i++) {
-			int airportIdFromList = listOfAirports.get(i).getAirportID();
-			String airportCodenameFromList = listOfAirports.get(i).getAirportCodename();
-			String airportFullnameFromList = listOfAirports.get(i).getAirportFullname();
-			String airportTypeFromList = listOfAirports.get(i).getAirportType();
-			String airportCityFromList = listOfAirports.get(i).getAirportCity();
-			String airportCountryFromList = listOfAirports.get(i).getAirportCountry();
-
-			if (airportCodenameFromList.equals(airportCodename)) {
-				Airport airport = new Airport(airportIdFromList, airportCodenameFromList, airportFullnameFromList, airportTypeFromList,
-						airportCityFromList, airportCountryFromList);
-				return airport;
-
-			}
-		}
-
-		return null;
-
-	}
 
 	private boolean isAirportDataUnique(String airportCodename) {
 
@@ -85,7 +63,16 @@ public class AirportManagementSystem {
 		return fetchDatabaseContentToList();
 	}
 
-	public void removeAirportFromArrayList(String airportCodename) {
+	public ArrayList<Airport> fetchDatabaseContentToList() {
+
+		return airportdb.fetchDatabaseContent();
+	}
+
+	private void addAirportToDatabase(Airport airport) {
+		airportdb.storeToDatabase(airport);
+
+	}
+	public void removeAirportFromArrayList(String airportCodename) { // CHECK IF NOT USED
 
 		ArrayList<Airport> listOfAirports = fetchDatabaseContentToList();
 
@@ -99,15 +86,7 @@ public class AirportManagementSystem {
 
 	}
 
-	public ArrayList<Airport> fetchDatabaseContentToList() {
-
-		return airportdb.fetchDatabaseContent();
-	}
-
-	private void addAirportToDatabase(Airport airport) {
-		airportdb.storeToDatabase(airport);
-
-	}
+	
 
 	public void removeAirportFromDatabase(Airport airport) {
 		airportdb.deleteContentFromDatabase(airport.getAirportCodename());
@@ -117,6 +96,35 @@ public class AirportManagementSystem {
 		return airportdb.getAirportIdFromAirport(airport);
 	}
 	
+	public Airport getAirportFromCodename(String airportCodename) {
+
+		try {
+		List<Airport> listOfAirports = fetchDatabaseContentToList();
+
+		for (int i = 0; i < listOfAirports.size(); i++) {
+			int airportIdFromList = listOfAirports.get(i).getAirportID();
+			String airportCodenameFromList = listOfAirports.get(i).getAirportCodename();
+			String airportFullnameFromList = listOfAirports.get(i).getAirportFullname();
+			String airportTypeFromList = listOfAirports.get(i).getAirportType();
+			String airportCityFromList = listOfAirports.get(i).getAirportCity();
+			String airportCountryFromList = listOfAirports.get(i).getAirportCountry();
+
+			if (airportCodenameFromList.equals(airportCodename)) {
+				Airport airport = new Airport(airportIdFromList, airportCodenameFromList, airportFullnameFromList, airportTypeFromList,
+						airportCityFromList, airportCountryFromList);
+				return airport;
+
+			}
+		}
+
+		return null;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
 	public Airport getAirportFromAirportId(int airport_id) {
 		return airportdb.getAirportFromAirportId(airport_id);
 	}

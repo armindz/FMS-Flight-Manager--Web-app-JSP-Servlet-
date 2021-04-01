@@ -1,6 +1,5 @@
 package database;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
 public class AirportDatabase {
-
 
 	public void storeToDatabase(Airport airport) {
 
@@ -38,13 +36,14 @@ public class AirportDatabase {
 
 	}
 
-	
+	// mechanism for fetching content from database and returning as ArrayList
 	@SuppressWarnings("unchecked")
-	public ArrayList<Airport> fetchDatabaseContent() { // mechanism for fetching content from database and returning as
-													// ArrayList
+	public ArrayList<Airport> fetchDatabaseContent() {
 
 		ArrayList<Airport> airports = new ArrayList<>();
+
 		try {
+
 			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
 			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
@@ -52,18 +51,17 @@ public class AirportDatabase {
 			Session session = sessionFactory.openSession();
 
 			Transaction transaction = session.beginTransaction();
-			airports = (ArrayList <Airport>) session.createQuery("from Airport").list();
+			airports = (ArrayList<Airport>) session.createQuery("from Airport").list();
 			transaction.commit();
-			return (ArrayList <Airport>) airports;
+
+			return (ArrayList<Airport>) airports;
 		}
 
 		catch (Exception e) {
-
-			System.out.println("Something went wrong with fetching database content");
 			e.printStackTrace();
 		}
-		return airports;
 
+		return airports;
 	}
 
 	public void updateDatabaseContent(int airportID, String airportCodename, String airportFullname, String airportType,
@@ -72,21 +70,23 @@ public class AirportDatabase {
 		try {
 
 			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
-			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(cfg.getProperties()).buildServiceRegistry();
+			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceRegistry);
 			Session session = sessionFactory.openSession();
-			
+
 			Transaction transaction = session.beginTransaction();
-			Query query = session.createQuery("update Airport set airportCodename=? AND airportFullname=? AND airportType=? "
-					+ "AND airportCity=? AND airportCountry=? WHERE airportID=?");
-			
+			Query query = session
+					.createQuery("update Airport set airportCodename=? AND airportFullname=? AND airportType=? "
+							+ "AND airportCity=? AND airportCountry=? WHERE airportID=?");
+
 			query.setString(1, airportCodename);
 			query.setString(2, airportFullname);
 			query.setString(3, airportType);
 			query.setString(4, airportCity);
 			query.setString(5, airportCountry);
 			query.setInteger(6, airportID);
-			
+
 			query.executeUpdate();
 			transaction.commit();
 		}
@@ -95,21 +95,22 @@ public class AirportDatabase {
 			ex.printStackTrace();
 		}
 	}
-	
-	public void updateDatabaseContent (Airport airport) {
-		
+
+	public void updateDatabaseContent(Airport airport) {
+
 		try {
-		
+
 			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
-			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(cfg.getProperties()).buildServiceRegistry();
+			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
 			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceRegistry);
 			Session session = sessionFactory.openSession();
-			
+
 			Transaction transaction = session.beginTransaction();
 			session.update(airport);
 			transaction.commit();
-		}
-		catch(Exception e) {
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -127,17 +128,14 @@ public class AirportDatabase {
 			Transaction transaction = session.beginTransaction();
 			session.delete(getAirportFromAirportCodename(airportCodename));
 			transaction.commit();
-
 		}
 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public void deleteContentFromDatabase(Airport airport) {
-
 
 		try {
 
@@ -156,12 +154,14 @@ public class AirportDatabase {
 			e.printStackTrace();
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
-	public static int generateAirportId() { // mechanism for generating airport ID based on last stored ID in database
 
-		List<Airport> listOfAirports = new ArrayList<>();
+
+	@SuppressWarnings("unchecked")
+	public int generateAirportId() { // mechanism for generating airport ID based on last stored ID in database
+
+		List <Airport> listOfAirports = new ArrayList<>();
 		int airportID = 0;
+		
 		try {
 
 			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airport.class);
@@ -189,9 +189,9 @@ public class AirportDatabase {
 	public int getAirportIdFromAirport(Airport airport) {
 
 		int airportID = 0;
-		
+
 		try {
-			
+
 			ArrayList<Airport> listOfAirports = fetchDatabaseContent();
 			for (int i = 0; i < listOfAirports.size(); i++) {
 				if (listOfAirports.get(i).equals(airport)) {
@@ -211,9 +211,9 @@ public class AirportDatabase {
 	public Airport getAirportFromAirportCodename(String airportCodename) {
 
 		Airport airport = null;
-		
+
 		try {
-			
+
 			ArrayList<Airport> listOfAirports = fetchDatabaseContent();
 			for (int i = 0; i < listOfAirports.size(); i++) {
 				if (listOfAirports.get(i).getAirportCodename().equals(airportCodename)) {
@@ -230,9 +230,9 @@ public class AirportDatabase {
 	public Airport getAirportFromAirportId(int airport_id) {
 
 		Airport airport = null;
-		
+
 		try {
-			
+
 			ArrayList<Airport> listOfAirports = fetchDatabaseContent();
 			for (int i = 0; i < listOfAirports.size(); i++) {
 				if (listOfAirports.get(i).getAirportID() == airport_id) {

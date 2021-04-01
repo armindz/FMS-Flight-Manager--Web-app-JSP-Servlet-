@@ -1,8 +1,10 @@
 import management.FlightManagementSystem;
 import models.Flight;
 import models.FlightTicket;
+import models.Seat;
 import booking.BookingFlightTicket;
 import database.FlightTicketDatabase;
+import database.SeatDatabase;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,13 +32,12 @@ public class BookingFlightTicketServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		try {
 
-			if (true) {
+			if (session.getAttribute("user") != null) {
 
 				bookAFlight(request, response);
 				requestDispatcher(request, response);
 			} else {
-				RequestDispatcher rd = request.getRequestDispatcher("login.html");
-				rd.forward(request, response);
+				response.sendRedirect("form/login.html");
 			}
 
 		}
@@ -50,15 +51,17 @@ public class BookingFlightTicketServlet extends HttpServlet {
 
 		try {
 			// convert request Strings to int and char
-
-			int flightID = Integer.parseInt(request.getParameter("flightID"));
+			SeatDatabase seatDb = new SeatDatabase();
+			BookingFlightTicket bft = new BookingFlightTicket();
+			FlightManagementSystem flightms = new FlightManagementSystem();
+			
+			Flight flight = flightms.getFlightFromFlightID(Integer.parseInt(request.getParameter("flightID")));
 			char seatRow = request.getParameter("seatRow").toUpperCase().charAt(0);
 			int seatNumber = Integer.valueOf(request.getParameter("seatNumber"));
 			String buyersName = request.getParameter("name").toUpperCase();
-
-			BookingFlightTicket bft = new BookingFlightTicket();
-
-			bft.bookAFlight(flightID, seatRow, seatNumber, buyersName);
+			
+			Seat seat = seatDb.getSeatFromSeatData(flight, seatRow, seatNumber);
+			bft.bookAFlight(flight, seat, buyersName);
 		}
 
 		catch (Exception e) {
@@ -74,7 +77,6 @@ public class BookingFlightTicketServlet extends HttpServlet {
 		String buyersName = request.getParameter("name").toUpperCase();
 		
 		FlightManagementSystem flightms = new FlightManagementSystem();
-		BookingFlightTicket bft = new BookingFlightTicket();
 		ArrayList<Flight> flightDataList = flightms.fetchFlightDatabaseContentToList();
 		FlightTicketDatabase flightTicketDb = new FlightTicketDatabase();
 		

@@ -11,11 +11,9 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-import models.Airline;
 import models.User;
 
 public class UserDatabase {
-
 
 	public void storeToDatabase(User user) {
 
@@ -30,9 +28,7 @@ public class UserDatabase {
 			session.save(user);
 			transaction.commit();
 
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -54,12 +50,12 @@ public class UserDatabase {
 			listOfUsers = session.createQuery("from User").list();
 			transaction.commit();
 
-			return  (ArrayList <User>) listOfUsers;
+			return (ArrayList<User>) listOfUsers;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return  (ArrayList <User>) listOfUsers;
+		return (ArrayList<User>) listOfUsers;
 	}
 
 	public void updateDatabaseContent(int userID, String username, String password) {
@@ -77,11 +73,13 @@ public class UserDatabase {
 			query.setString(2, password);
 			query.setInteger(3, userID);
 			transaction.commit();
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 	}
+
 	public void updateDatabaseContent(User user) {
 
 		try {
@@ -101,20 +99,27 @@ public class UserDatabase {
 			e.printStackTrace();
 		}
 	}
-	
-	public void deleteContentFromDatabase(int userID) {
-		
-		Configuration cfg = new Configuration().configure().addAnnotatedClass(User.class);
-		ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
-				.buildServiceRegistry();
-		SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
-		Session session = sessionFactory.openSession();
 
-		Transaction transaction = session.beginTransaction();
-		Query query = session.createQuery("DELETE FROM User WHERE user_id=?");
-		query.setInteger(1, userID);
-		transaction.commit();
+	public void deleteContentFromDatabase(int userID) {
+
+		try {
+
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(User.class);
+			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
+					.buildServiceRegistry();
+			SessionFactory sessionFactory = cfg.buildSessionFactory(serviceReg);
+			Session session = sessionFactory.openSession();
+
+			Transaction transaction = session.beginTransaction();
+			Query query = session.createQuery("DELETE FROM User WHERE user_id=?");
+			query.setInteger(1, userID);
+			transaction.commit();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
 	public void deleteContentFromDatabase(User user) {
 
 		try {
@@ -135,9 +140,9 @@ public class UserDatabase {
 		}
 	}
 
+	// mechanism for generating userID based on last stored ID in database
 	@SuppressWarnings("unchecked")
-	public int generateUserID() { // mechanism for generating userID based on last stored ID in
-									// database
+	public int generateUserID() {
 
 		int userID = 0;
 

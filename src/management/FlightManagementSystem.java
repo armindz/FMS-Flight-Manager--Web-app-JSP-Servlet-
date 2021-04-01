@@ -1,10 +1,8 @@
 package management;
 
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 
 import database.AirlineDatabase;
 import database.AirportDatabase;
@@ -26,92 +24,101 @@ public class FlightManagementSystem {
 	FlightDatabase flightdb = new FlightDatabase();
 	FlightTicketDatabase flightTicketdb = new FlightTicketDatabase();
 
-	
-	
+	// create flight with relevant flight data & generate flight ID
 	public void createFlight(String airlineCodename, String airportCodename, String destinationAirportCodename,
 			String flightClass, Calendar dateOfFlight, char flightSeatRows, int flightNumberOfSeatsPerRow,
-			double flightPrice) throws SQLException {
+			double flightPrice) {
 
-		Flight flight = new Flight(flightdb.generateFlightId(), airlinems.getAirlineFromCodename(airlineCodename),
-				airportms.getAirportFromCodename(airportCodename),
-				airportms.getAirportFromCodename(destinationAirportCodename), flightClass, dateOfFlight, flightSeatRows,
-				flightNumberOfSeatsPerRow, flightPrice);
+		try {
+			Flight flight = new Flight(flightdb.generateFlightId(), airlinems.getAirlineFromCodename(airlineCodename),
+					airportms.getAirportFromCodename(airportCodename),
+					airportms.getAirportFromCodename(destinationAirportCodename), flightClass, dateOfFlight,
+					flightSeatRows, flightNumberOfSeatsPerRow, flightPrice);
 
-		System.out.println(flight);
-		if (isFlightDataValid(flight, flight.getSeatRow(), flight.getAirline().getAirlineCodename(),
-				flight.getAirport().getAirportCodename(), flight.getDestinationAirport().getAirportCodename())) {
+			if (isFlightDataValid(flight, flight.getSeatRow(), flight.getAirline().getAirlineCodename(),
+					flight.getAirport().getAirportCodename(), flight.getDestinationAirport().getAirportCodename())) {
 
-			addFlightToDatabase(flight);
-			createSeatsAndStoreToDatabase(flight, flight.getSeatRow(), flight.getSeatNumber());
-			
+				addFlightToDatabase(flight);
+				createSeatsAndStoreToDatabase(flight, flight.getSeatRow(), flight.getSeatNumber());
 
-			System.out.println("Flight successfully created!");
-		} else {
-			System.out.println("Data is not unique or seat row not valid.");
+				System.out.println("Flight successfully created!");
+			} else {
+				System.out.println("Data is not unique or seat row not valid.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
+
 	private boolean isFlightDataValid(Flight flight, char flightSeatRows, String airlineCodename,
-			String airportCodename, String destinationAirportCodename) throws SQLException {
+			String airportCodename, String destinationAirportCodename) {
 
-		if (isFlightDataUnique(flight) && isSeatRowValid(flightSeatRows) && isAirlineCodenameValid(airlineCodename)
-				&& isAirportCodenameValid(airportCodename) && isAirportCodenameValid(destinationAirportCodename)) {
-			return true;
+		try {
+			if (isFlightDataUnique(flight) && isSeatRowValid(flightSeatRows) && isAirlineCodenameValid(airlineCodename)
+					&& isAirportCodenameValid(airportCodename) && isAirportCodenameValid(destinationAirportCodename)) {
+				return true;
+			}
+
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
 		return false;
 	}
 
-	
-
-	private void createSeatsAndStoreToDatabase(Flight flight, char seatRow, int numberOfSeatsPerRow) throws SQLException {
+	public void createSeatsAndStoreToDatabase(Flight flight, char seatRow, int numberOfSeatsPerRow)       
+			throws SQLException {
 
 		for (int i = 'A'; i <= seatRow; i++) {
 			for (int j = 1; j <= numberOfSeatsPerRow; j++) {
 
 				char seatRows = (char) i;
-				Seat seat = new Seat(seatdb.generateSeatId(), flight.getFlightId(), seatRows, j, true);
-
+				Seat seat = new Seat(seatdb.generateSeatId(), flight, seatRows, j, true);
+				
 				flight.addToListOfSeats(seat);
 				addSeatToDatabase(seat);
+				System.out.println(seat.toString());
 			}
 
 		}
 		System.out.println("List" + flight.getListOfSeats());
 	}
 
-	public void displayAvailableSeatsInSpecificFlight(int flight_id) {
+	public void displayAvailableSeatsInSpecificFlight(int flight_id) {						// CHECK IF NOT USED
 
 		ArrayList<Seat> listOfSeats = fetchSeatDatabaseContentToList(); // prepare listOfSeats ArrayList for use by
 																		// fetching content from database
 
 		for (int i = 0; i < listOfSeats.size(); i++) {
 
-			if ((listOfSeats.get(i).getFlightId() == flight_id) && listOfSeats.get(i).isSeatAvailable()) {
+			if ((listOfSeats.get(i).getFlight().getFlightId() == flight_id) && listOfSeats.get(i).isSeatAvailable()) {
 				System.out.println(listOfSeats.get(i));
 			}
 		}
 	}
 
-	public void markSeatAsAvailable(int flightId, char seatRow, int seatNumber) {
+	public void markSeatAsAvailable(Seat seat) {
 
 		boolean isSeatAvailable = true;
-	
-		seatdb.updateDatabaseContent(flightId, seatRow, seatNumber, isSeatAvailable);
 
+		seatdb.updateDatabaseContentToChangeSeatAvailability(seat, isSeatAvailable);
 	}
 
-	public void markSeatAsUnavailable(int flightId, char seatRow, int seatNumber) {
+	public void markSeatAsUnavailable(Seat seat) {
 
 		boolean isSeatAvailable = false;
-		seatdb.updateDatabaseContent(flightId, seatRow, seatNumber, isSeatAvailable);
 
+		seatdb.updateDatabaseContentToChangeSeatAvailability(seat, isSeatAvailable);
 	}
 
-	private boolean isFlightDataUnique(Flight flight) throws SQLException { // mechanism for checking if forwarded flight is unique based on data from database
+	// mechanism for checking if forwarded flight is unique based fetched database
+	// content
+	private boolean isFlightDataUnique(Flight flight) throws SQLException {
 
-		ArrayList<Flight> listOfFlights = flightdb.fetchDatabaseContent(); // return flight database content through
-																			// given ArrayList
+		// return flight database content through given list
+		ArrayList<Flight> listOfFlights = flightdb.fetchDatabaseContent();
+
 		if (!listOfFlights.isEmpty() && listOfFlights.contains(flight)) {
 			return false;
 		}
@@ -119,11 +126,12 @@ public class FlightManagementSystem {
 		return true;
 	}
 
-	private boolean isAirlineCodenameValid(String airlineCodename) { // mechanism for checking if forwarded airline codename is valid
+	// mechanism for checking if forwarded airline code name is valid
+	private boolean isAirlineCodenameValid(String airlineCodename) {
 
-		ArrayList<Airline> listOfAirlines = (ArrayList<Airline>) airlinedb.fetchDatabaseContent(); // // return airline database content
-																				// through
-		// given ArrayList
+		// return airline database content through given list
+		ArrayList<Airline> listOfAirlines = (ArrayList<Airline>) airlinedb.fetchDatabaseContent();
+
 		for (int i = 0; i < listOfAirlines.size(); i++) {
 			String airlineCodenameFromList = listOfAirlines.get(i).getAirlineCodename();
 			if (airlineCodenameFromList.equals(airlineCodename)) {
@@ -134,10 +142,11 @@ public class FlightManagementSystem {
 		return false;
 	}
 
-	private boolean isAirportCodenameValid(String airportCodename) { // mechanism for checking if forwarded airport codename is valid
+	// mechanism for checking if forwarded airport code name is valid
+	private boolean isAirportCodenameValid(String airportCodename) {
 
-		ArrayList<Airport> listOfAirports = (ArrayList <Airport>) airportdb.fetchDatabaseContent(); // return airport database content through
-																				// given ArrayList
+		// return airport database content through given list
+		ArrayList<Airport> listOfAirports = (ArrayList<Airport>) airportdb.fetchDatabaseContent();
 
 		for (int i = 0; i < listOfAirports.size(); i++) {
 			String airportCodenameFromList = listOfAirports.get(i).getAirportCodename();
@@ -149,8 +158,9 @@ public class FlightManagementSystem {
 		System.out.println("Airport codename is not in database.");
 		return false;
 	}
-
-	private boolean isSeatRowValid(char seatRow) { // mechanism for checking if forwarded seat row is valid
+	
+	// mechanism for checking if forwarded seat row is valid
+	private boolean isSeatRowValid(char seatRow) { 
 
 		if (seatRow == 'A' || seatRow == 'B' || seatRow == 'C' || seatRow == 'D' || seatRow == 'E' || seatRow == 'F') {
 			return true;
@@ -160,9 +170,8 @@ public class FlightManagementSystem {
 
 	public Flight getFlightFromFlightID(int flightID) {
 
-		ArrayList<Flight> listOfFlights = flightdb.fetchDatabaseContent(); // return flight database content through
-																			// given ArrayList
-
+		ArrayList<Flight> listOfFlights = flightdb.fetchDatabaseContent(); 
+		
 		for (int i = 0; i < listOfFlights.size(); i++) {
 
 			int flightIDFromList = listOfFlights.get(i).getFlightId();
@@ -184,8 +193,7 @@ public class FlightManagementSystem {
 
 	public int getFlightIdFromFlight(Flight flight) {
 
-		ArrayList<Flight> listOfFlights = flightdb.fetchDatabaseContent(); // return flight database content through
-																			// given ArrayList
+		ArrayList<Flight> listOfFlights = flightdb.fetchDatabaseContent(); 
 
 		for (int i = 0; i < listOfFlights.size(); i++) {
 
@@ -200,16 +208,15 @@ public class FlightManagementSystem {
 				return flightFromList.getFlightId();
 			}
 		}
-			return 0;
-		}
-	
+		return 0;
+	}
 
 	public int getFlightIdFromFlightData(String airlineCodename, String airportCodename,
-			String destinationAirportCodename, String flightClass, Calendar dateOfFlight, char flightSeatRows,
-			int seatNumber, double flightPrice) {
+			String destinationAirportCodename, String flightClass, Calendar dateOfFlight, 
+			char flightSeatRows,int seatNumber, double flightPrice) {
 
-		ArrayList<Flight> listOfFlights = flightdb.fetchDatabaseContent(); // return flight database content through
-																			// given ArrayList
+		// return flight database content through given list
+		ArrayList<Flight> listOfFlights = flightdb.fetchDatabaseContent();
 
 		for (int i = 0; i < listOfFlights.size(); i++) {
 
@@ -227,8 +234,6 @@ public class FlightManagementSystem {
 		}
 		return 0;
 	}
-	
-	
 
 	public ArrayList<Flight> getListOfFlights() {
 
@@ -240,10 +245,10 @@ public class FlightManagementSystem {
 		return fetchSeatDatabaseContentToList();
 	}
 
-	
-	public ArrayList<Seat> fetchSeatDatabaseContentToList() { // fetch seat database content and return as ArrayList
+	// fetch seat database content and return as ArrayList
+	public ArrayList<Seat> fetchSeatDatabaseContentToList() { 
 
-		ArrayList<Seat> listOfSeats =  (ArrayList <Seat>) seatdb.fetchDatabaseContent();
+		ArrayList<Seat> listOfSeats = (ArrayList<Seat>) seatdb.fetchDatabaseContent();
 		if (listOfSeats.isEmpty()) {
 			System.out.println("There's no seats stored in database!");
 			return null;
@@ -251,7 +256,8 @@ public class FlightManagementSystem {
 		return listOfSeats;
 	}
 
-	public ArrayList<Flight> fetchFlightDatabaseContentToList() { // fetch flight database content and return as ArrayList
+	// fetch flight database content and return as list
+	public ArrayList<Flight> fetchFlightDatabaseContentToList() { 
 
 		ArrayList<Flight> listOfFlights = flightdb.fetchDatabaseContent();
 
@@ -262,21 +268,28 @@ public class FlightManagementSystem {
 		return listOfFlights;
 	}
 
-	public void addFlightToDatabase(Flight flight) throws SQLException  {
+	public void addFlightToDatabase(Flight flight) throws SQLException {
 
 		flightdb.storeToDatabase(flight);
 	}
 
-	public void removeFlightFromDatabase(int flight_ID) throws SQLException {    // delete flight content based on forwarded flight ID and delete seats related to flight
-
-		flightdb.deleteContentFromDatabase(flight_ID);	
-		seatdb.deleteContentFromDatabase(flight_ID); 
+	// delete flight content based on forwarded flight ID and delete seats related to flight
+	public void removeFlightFromDatabase(int flight_ID) throws SQLException { 
+	
+		try {
 		flightTicketdb.deleteAllContentFromDatabaseRelatedToSpecificFlight(flight_ID);
+		seatdb.deleteContentFromDatabase(flightdb.getFlightByFlightId(flight_ID));
+		flightdb.deleteContentFromDatabase(flight_ID);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void addSeatToDatabase(Seat seat) throws SQLException { // add seat to database
 
 		seatdb.storeToDatabase(seat);
 	}
-	
+
 }

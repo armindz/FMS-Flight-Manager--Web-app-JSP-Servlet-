@@ -29,13 +29,12 @@ public class FlightRemoveServlet extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		try {
-			if (true) {
+			if (session.getAttribute("user") != null) {
 				removeFlight(request, response);
 			}
 
 			else {
-				RequestDispatcher rd = request.getRequestDispatcher("login.html");
-				rd.forward(request, response);
+				response.sendRedirect("form/login.html");
 
 			}
 		} catch (SQLException | IOException | ParseException e) {

@@ -11,7 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import booking.BookingFlightTicket;
+import database.SeatDatabase;
+import management.FlightManagementSystem;
+import models.Flight;
 import models.FlightTicket;
+import models.Seat;
 
 @WebServlet("/FlightTicketRemoveServlet")
 public class FlightTicketRemoveServlet extends HttpServlet {
@@ -25,11 +29,13 @@ public class FlightTicketRemoveServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		if (true) {
+	
+		if (session.getAttribute("user") != null) {
+			
 			removeFlightTicket(request, response);
 		} else {
-			RequestDispatcher rd = request.getRequestDispatcher("login.html");
-			rd.forward(request, response);
+			
+			response.sendRedirect("form/login.html");
 		}
 
 	}
@@ -37,20 +43,21 @@ public class FlightTicketRemoveServlet extends HttpServlet {
 	protected void removeFlightTicket(HttpServletRequest request, HttpServletResponse response) {
 
 		BookingFlightTicket bft = new BookingFlightTicket();
+		SeatDatabase seatDb = new SeatDatabase();
 		ArrayList<FlightTicket> flightTicketDataToList = bft.getListOfFlightTickets();
-
+		FlightManagementSystem flightms = new FlightManagementSystem();
 		try {
-			int flightID = Integer.parseInt(request.getParameter("product_id"));
+			Flight flight = flightms.getFlightFromFlightID(Integer.parseInt(request.getParameter("product_id")));
 			char seatRow = request.getParameter("seatRow").charAt(0);
 			int seatNumber = Integer.valueOf(request.getParameter("seatNumber"));
-
+			Seat seat = seatDb.getSeatFromSeatData(flight, seatRow, seatNumber);
 			for (int i = 0; i < flightTicketDataToList.size(); i++) {
 
-				if (flightTicketDataToList.get(i).getFlightId() == flightID
-						&& flightTicketDataToList.get(i).getSeatRow() == seatRow
-						&& flightTicketDataToList.get(i).getSeatNumber() == seatNumber) {
+				if (flightTicketDataToList.get(i).getFlight().getFlightId() == flight.getFlightId()
+						&& flightTicketDataToList.get(i).getSeat().getSeatRow() == seatRow
+						&& flightTicketDataToList.get(i).getSeat().getSeatNumber() == seatNumber) {
 
-					bft.removeFlightTicketFromDatabase(flightID, seatRow, seatNumber);
+					bft.removeFlightTicketFromDatabase(flight, seat);
 					response.sendRedirect("list/flightList.jsp");
 				}
 			}

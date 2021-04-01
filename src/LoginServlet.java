@@ -1,5 +1,7 @@
 
 import management.UserManagementSystem;
+import models.User;
+
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,18 +25,21 @@ public class LoginServlet extends HttpServlet {
 		UserManagementSystem userms = new UserManagementSystem();
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-
+		int userID = userms.getUserIdFromUsersData(username, password);
+		
+		User user = new User (userID, username, password);
+		
 		if (userms.isLoginValid(username, password)) {
 
 			HttpSession session = request.getSession();
-			session.setAttribute("username", username);
-
+			session.setAttribute("user", user);
+		
 			// request.login(username, password);
 			response.sendRedirect("index.html");
 		}
-
+		
 		else {
-			response.sendRedirect("login.html");
+			response.sendRedirect("form/login.html");
 		}
 	}
 

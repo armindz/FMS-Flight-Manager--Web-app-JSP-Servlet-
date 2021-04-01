@@ -25,12 +25,13 @@ public class AirportPreviewServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
-		if (true) {
+		HttpSession session = request.getSession();
+	
+				if (session.getAttribute("user") != null ) {
 			airportData(request, response);
 		} else {
-			RequestDispatcher rd = request.getRequestDispatcher("login.html");
-			rd.forward(request, response);
+			response.sendRedirect("form/login.html");
+			
 		 }
 
 	}

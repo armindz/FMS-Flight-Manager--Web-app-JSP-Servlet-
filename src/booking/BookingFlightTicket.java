@@ -16,26 +16,22 @@ public class BookingFlightTicket {
 	FlightManagementSystem flightms = new FlightManagementSystem();
 	SeatDatabase seatdb = new SeatDatabase();
 	FlightTicketDatabase flightTicketdb = new FlightTicketDatabase();
-	private ArrayList<Seat> listOfSeats = flightms.getListOfSeats();
 
-	public void bookAFlight(int flightId, char seatRow, int seatNumber, String buyers_Name) {
+	public void bookAFlight(Flight flight, Seat seat, String buyers_Name) {
 
 		try {
 			
-			System.out.println(isSeatAvailable(flightId, seatRow, seatNumber));
-			if (isSeatAvailable(flightId, seatRow, seatNumber)) {
+			if (isSeatAvailable(seat)) {
 				
-				Flight flight = flightms.getFlightFromFlightID(flightId);
-				FlightTicket flightTicket = new FlightTicket(flightTicketdb.generateTicketId(), flightId, flight.getAirline(), flight.getAirport(),
-						flight.getDestinationAirport(), flight.getFlightClass(), flight.getDateOfFlight(), seatRow,
-						seatNumber, flight.getFlightPrice(), buyers_Name);
+				
+				FlightTicket flightTicket = new FlightTicket(flightTicketdb.generateTicketId(), flight, seat, buyers_Name);
+			
 				addFlightTicketToDatabase(flightTicket);
-				flightms.markSeatAsUnavailable(flightId, seatRow, seatNumber);
+				flightms.markSeatAsUnavailable(seat);
 				System.out.println("Successfully booked!");
 
 			} else {
-				System.out
-						.println("Problem with booking a flight. Seat is not available. Be aware of typing mistakes! ");
+				System.out.println("Problem with booking a flight. ");
 			}
 		}
 
@@ -44,17 +40,17 @@ public class BookingFlightTicket {
 		}
 	}
 
-	public boolean isSeatAvailable(int flightId, char seatRow, int seatNumber) {
+	public boolean isSeatAvailable(Seat seat) {
 
 		ArrayList<Seat> listOfSeats = (ArrayList <Seat>) seatdb.fetchDatabaseContent();
 		for (int i = 0; i < listOfSeats.size(); i++) {
 
-			int flightIdFromList = listOfSeats.get(i).getFlightId();
+			Flight flightFromList = listOfSeats.get(i).getFlight();
 			char seatRowFromList = listOfSeats.get(i).getSeatRow();
 			int seatNumberFromList = listOfSeats.get(i).getSeatNumber();
 			boolean isSeatAvailableFromList = listOfSeats.get(i).isSeatAvailable();
 
-			if ((flightIdFromList == flightId) && (seatRow == seatRowFromList) && (seatNumber == seatNumberFromList)
+			if ((flightFromList.getFlightId() == seat.getFlight().getFlightId()) && (seat.getSeatRow() == seatRowFromList) && (seat.getSeatNumber() == seatNumberFromList)
 					&& (isSeatAvailableFromList)) {
 
 				return true;
@@ -69,10 +65,10 @@ public class BookingFlightTicket {
 
 		return fetchFlightTicketDatabaseContentToList();
 	}
-
-	public ArrayList<FlightTicket> fetchFlightTicketDatabaseContentToList() { // fetch flight database content and
-																				// return as ArrayList
-
+	
+	// fetch flight database content and return as ArrayList
+	public ArrayList<FlightTicket> fetchFlightTicketDatabaseContentToList() { 
+																				
 		ArrayList<FlightTicket> listOfFlightTickets = flightTicketdb.fetchDatabaseContent();
 
 		if (listOfFlightTickets.isEmpty()) {
@@ -82,21 +78,26 @@ public class BookingFlightTicket {
 		return listOfFlightTickets;
 	}
 
-	public void addFlightTicketToDatabase(FlightTicket flightTicket) throws SQLException {
-
+	public void addFlightTicketToDatabase(FlightTicket flightTicket) {
+		
+		try {
 		flightTicketdb.storeToDatabase(flightTicket);
 	}
-
-	public void removeFlightTicketFromDatabase(int flight_ID, char seatRow, int seatNumber) { // delete flight ticket and mark seat as available
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// delete flight ticket and mark seat as available
+	public void removeFlightTicketFromDatabase(Flight flight, Seat seat) { 
 		
-		
-		flightTicketdb.deleteContentFromDatabase(flight_ID, seatRow, seatNumber);
-		flightms.markSeatAsAvailable(flight_ID, seatRow, seatNumber);
+		flightTicketdb.deleteContentFromDatabase(flight.getFlightId(), seat.getSeatRow(), seat.getSeatNumber());
+		flightms.markSeatAsAvailable(seat);
 
 	}
 	
-
-	public void removeFLightTicketRelatedToSpecificFlight(int flight_ID) { // delete flight tickets, used when flight is being deleted
+	// delete flight tickets, used when flight is being deleted
+	public void removeFLightTicketRelatedToSpecificFlight(int flight_ID) { 
 
 		flightTicketdb.deleteAllContentFromDatabaseRelatedToSpecificFlight(flight_ID);
 		

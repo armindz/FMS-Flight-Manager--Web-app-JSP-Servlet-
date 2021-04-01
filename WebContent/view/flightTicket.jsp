@@ -23,7 +23,7 @@
 
 		<%
 		Date date = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy hh:mm");
+		SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm");
 		String strDate = formatter.format(date);
 		%>
 		<div class="ticketPreviewTable1">
@@ -35,7 +35,7 @@
 
 				<label for=" airportFROM ">FROM</label>
 				<h3 class="airportFROM ">
-					<%=flightTicket.getAirport().getAirportCodename()%>
+					<%=flightTicket.getFlight().getAirport().getAirportCodename()%>
 				</h3>
 
 
@@ -44,13 +44,13 @@
 				<h5 class="name "><%=flightTicket.getBuyersName()%></h5>
 
 				<label for="flightID ">FLIGHT ID</label>
-				<h5 class="flightID "><%=flightTicket.getFlightId()%></h5>
+				<h5 class="flightID "><%=flightTicket.getFlight().getFlightId()%></h5>
 
 				<label for="date ">DATE</label>
-				<h5 class="DATE "><%=formatter.format(flightTicket.getDateOfFlight().getTime())%></h5>
+				<h5 class="DATE "><%=formatter.format(flightTicket.getFlight().getDateOfFlight().getTime())%></h5>
 
 				<label for="flightPrice ">PRICE</label>
-				<h5 class="flightPrice "><%=flightTicket.getFlightPrice()%>
+				<h5 class="flightPrice "><%=flightTicket.getFlight().getFlightPrice()%>
 					KM
 				</h5>
 			</div>
@@ -60,23 +60,23 @@
 
 				<label for="airportTO ">TO</label>
 				<h3 class="airportTO ">
-					<%=flightTicket.getDestinationAirport().getAirportCodename()%></h3>
+					<%=flightTicket.getFlight().getDestinationAirport().getAirportCodename()%></h3>
 
 				<label for="airline ">AIRLINE</label>
 				<h5 class="airline ">
-					<%=flightTicket.getAirline().getAirlineCodename()%></h5>
+					<%=flightTicket.getFlight().getAirline().getAirlineCodename()%></h5>
 
 				<label for="seat ">SEAT</label>
 				<h5 class="seat ">
-					<%=flightTicket.getSeatRow()%></h5>
+					<%=flightTicket.getSeat().getSeatRow()%></h5>
 
 				<label for="row ">NUMBER</label>
 				<h5 class="row ">
-					<%=flightTicket.getSeatNumber()%></h5>
+					<%=flightTicket.getSeat().getSeatNumber()%></h5>
 
 				<label for="flightClass ">FLIGHT CLASS</label>
 				<h5 class="flightClass ">
-					<%=flightTicket.getFlightClass()%></h5>
+					<%=flightTicket.getFlight().getFlightClass()%></h5>
 			</div>
 
 		</div>
@@ -85,16 +85,16 @@
 
 			<label for=" airportFROM ">FROM</label>
 			<h5 class="airportFROM ">
-				<%=flightTicket.getAirport().getAirportCodename()%>
+				<%=flightTicket.getFlight().getAirport().getAirportCodename()%>
 			</h5>
 
 			<label for="airportTO ">TO</label>
-			<h5 class="airportTO "><%=flightTicket.getDestinationAirport().getAirportCodename()%></h5>
+			<h5 class="airportTO "><%=flightTicket.getFlight().getDestinationAirport().getAirportCodename()%></h5>
 			<br />
 			<br />
 			<br /> <label for="airline ">AIRLINE</label>
 			<h5 class="airline ">
-				<%=flightTicket.getAirline().getAirlineCodename()%></h5>
+				<%=flightTicket.getFlight().getAirline().getAirlineCodename()%></h5>
 			<br />
 			<br />
 			<br /> <label for="name ">NAME</label>
@@ -103,24 +103,24 @@
 			<br />
 			<br />
 			<br /> <label for="flightID ">FLIGHT ID</label>
-			<h5 class="flightID "><%=flightTicket.getFlightId()%></h5>
+			<h5 class="flightID "><%=flightTicket.getFlight().getFlightId()%></h5>
 			<label for="flightPrice ">PRICE</label>
-			<h5 class="flightPrice "><%=flightTicket.getFlightPrice()%>
+			<h5 class="flightPrice "><%=flightTicket.getFlight().getFlightPrice()%>
 				KM
 			</h5>
 
 			<br />
 			<br />
 			<br /> <label for="date ">DATE</label>
-			<h5 class="DATE"><%=formatter.format(flightTicket.getDateOfFlight().getTime())%></h5>
+			<h5 class="DATE"><%=formatter.format(flightTicket.getFlight().getDateOfFlight().getTime())%></h5>
 			<br />
 			<br />
 			<br /> <label for="seat ">SEAT</label>
 			<h5 class="seat ">
-				<%=flightTicket.getSeatRow()%></h5>
+				<%=flightTicket.getSeat().getSeatRow()%></h5>
 
 			<label for="row ">ROW</label>
-			<h5 class="row "><%=flightTicket.getSeatNumber()%></h5>
+			<h5 class="row "><%=flightTicket.getSeat().getSeatNumber()%></h5>
 
 		</div>
 

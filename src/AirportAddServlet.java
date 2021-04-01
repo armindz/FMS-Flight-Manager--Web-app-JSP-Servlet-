@@ -24,15 +24,14 @@ public class AirportAddServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession();
 		try {
-			if (true) {
+			if (session.getAttribute("user") != null) {
 				createAirport(request, response);
 			}
 
 			else {
-				RequestDispatcher rd = request.getRequestDispatcher("login.html");
-				rd.forward(request, response);
+				response.sendRedirect("form/login.html");
 			}
 
 		}

@@ -1,7 +1,6 @@
 
 package database;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +34,13 @@ public class AirlineDatabase {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<Airline> fetchDatabaseContent() { // mechanism for fetching content from database and returning as List
 
 		List<Airline> airlines = new ArrayList<>();
+		
 		try {
 
 			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airline.class);
@@ -65,6 +64,7 @@ public class AirlineDatabase {
 	public void updateDatabaseContent(Airline airline) {
 
 		try {
+			
 			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airline.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
@@ -107,6 +107,7 @@ public class AirlineDatabase {
 	public void deleteContentFromDatabase(String airlineCodename) {
 
 		try {
+		
 			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airline.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
@@ -126,6 +127,7 @@ public class AirlineDatabase {
 	public void deleteContentFromDatabase(Airline airline) {
 
 		try {
+		
 			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airline.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
@@ -142,10 +144,11 @@ public class AirlineDatabase {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static int generateAirlineId() { // mechanism for generating airline ID based on last stored ID in database
+	public int generateAirlineId() { // mechanism for generating airline ID based on last stored ID in database
 
 		List<Airline> airlines = new ArrayList<>();
 		int airlineID = 0;
+	
 		try {
 
 			Configuration cfg = new Configuration().configure().addAnnotatedClass(Airline.class);
@@ -173,6 +176,7 @@ public class AirlineDatabase {
 
 		ArrayList<Airline> listOfAirlines = fetchDatabaseContent();
 		int airlineID = 0;
+	
 		try {
 
 			for (int i = 0; i < listOfAirlines.size(); i++) {
@@ -182,7 +186,6 @@ public class AirlineDatabase {
 				}
 			}
 		}
-
 		catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -222,7 +225,6 @@ public class AirlineDatabase {
 					return airline;
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

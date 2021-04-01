@@ -1,9 +1,7 @@
 
 package database;
 
-import java.sql.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.hibernate.Transaction;
 import org.hibernate.Query;
@@ -17,7 +15,9 @@ import management.AirlineManagementSystem;
 import management.AirportManagementSystem;
 import models.Airline;
 import models.Airport;
+import models.Flight;
 import models.FlightTicket;
+import models.Seat;
 
 public class FlightTicketDatabase {
 
@@ -28,7 +28,8 @@ public class FlightTicketDatabase {
 
 		try {
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class).addAnnotatedClass(Flight.class).addAnnotatedClass(Seat.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -38,24 +39,23 @@ public class FlightTicketDatabase {
 			Transaction transaction = session.beginTransaction();
 			session.save(flightTicket);
 			transaction.commit();
-
 		}
 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
-	public static int generateTicketId() { // mechanism for generating seat ID based on last stored ID in database
+	public int generateTicketId() { // mechanism for generating seat ID based on last stored ID in database
 
 		int ticketID = 0;
 		try {
 
 			ArrayList<FlightTicket> listOfFlightTickets = new ArrayList<FlightTicket>();
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class).addAnnotatedClass(Flight.class).addAnnotatedClass(Seat.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -75,18 +75,19 @@ public class FlightTicketDatabase {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return ticketID;
 	}
 
+	// mechanism for fetching content from database and returning as ArrayList
 	@SuppressWarnings("unchecked")
-	public ArrayList<FlightTicket> fetchDatabaseContent() { // mechanism for fetching content from database and
-															// returning as ArrayList
+	public ArrayList<FlightTicket> fetchDatabaseContent() {
 
 		ArrayList<FlightTicket> flightTickets = new ArrayList<>();
+
 		try {
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class).addAnnotatedClass(Flight.class).addAnnotatedClass(Seat.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -98,11 +99,9 @@ public class FlightTicketDatabase {
 			transaction.commit();
 
 			return flightTickets;
-
 		}
 
 		catch (Exception e) {
-
 			e.printStackTrace();
 		}
 
@@ -113,7 +112,8 @@ public class FlightTicketDatabase {
 
 		try {
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class).addAnnotatedClass(Flight.class).addAnnotatedClass(Seat.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -123,21 +123,20 @@ public class FlightTicketDatabase {
 			Transaction transaction = session.beginTransaction();
 			session.update(ticket);
 			transaction.commit();
-
 		}
 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public void deleteContentFromDatabase(int flightID, char seatRow, int seatNumber) {
-		
+
 		try {
-		deleteContentFromDatabase(getFlightTicketFromTicketData(flightID, seatRow, seatNumber));
-		}
-		catch (Exception e) {
+
+			deleteContentFromDatabase(getFlightTicketFromTicketData(flightID, seatRow, seatNumber));
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -145,8 +144,9 @@ public class FlightTicketDatabase {
 	public void deleteContentFromDatabase(FlightTicket ticket) {
 
 		try {
-
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			System.out.println(ticket.toString());
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class).addAnnotatedClass(Flight.class).addAnnotatedClass(Seat.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -156,20 +156,19 @@ public class FlightTicketDatabase {
 			Transaction transaction = session.beginTransaction();
 			session.delete(ticket);
 			transaction.commit();
-
 		}
 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public void deleteAllContentFromDatabaseRelatedToSpecificFlight(int flight_ID) {
 
 		try {
 
-			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class).addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class);
+			Configuration cfg = new Configuration().configure().addAnnotatedClass(FlightTicket.class)
+					.addAnnotatedClass(Airline.class).addAnnotatedClass(Airport.class).addAnnotatedClass(Flight.class).addAnnotatedClass(Seat.class);
 			ServiceRegistry serviceReg = new ServiceRegistryBuilder().applySettings(cfg.getProperties())
 					.buildServiceRegistry();
 
@@ -181,19 +180,19 @@ public class FlightTicketDatabase {
 			query.setInteger(1, flight_ID);
 			query.executeUpdate();
 			transaction.commit();
-
 		}
 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public FlightTicket getFlightTicketFromTicketId(int ticketId) {
 
 		FlightTicket ticket = null;
+
 		try {
+
 			ArrayList<FlightTicket> listOfTickets = fetchDatabaseContent();
 
 			for (int i = 0; i < listOfTickets.size(); i++) {
@@ -210,15 +209,16 @@ public class FlightTicketDatabase {
 		return ticket;
 	}
 
-	public FlightTicket getFlightTicketFromTicketData(int flightId, char seatRow, int seatNumber) {
+	public FlightTicket getFlightTicketFromTicketData(int flightId, char seatRow, int seatNumber) { // IMPLEMENT FLIGHT AND SEAT OBJ
 
 		FlightTicket ticket = null;
+
 		try {
 			ArrayList<FlightTicket> listOfTickets = fetchDatabaseContent();
 
 			for (int i = 0; i < listOfTickets.size(); i++) {
-				if (listOfTickets.get(i).getFlightId() == flightId && listOfTickets.get(i).getSeatRow() == seatRow
-						&& listOfTickets.get(i).getSeatNumber() == seatNumber) {
+				if (listOfTickets.get(i).getFlight().getFlightId() == flightId && listOfTickets.get(i).getSeat().getSeatRow() == seatRow
+						&& listOfTickets.get(i).getSeat().getSeatNumber() == seatNumber) {
 					ticket = listOfTickets.get(i);
 					return ticket;
 				}

@@ -1,16 +1,12 @@
 package management;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import database.AirlineDatabase;
 import models.Airline;
 
 public class AirlineManagementSystem {
 	
-
-	private static ArrayList<Airline> listOfAirlines = new ArrayList<Airline>();
 	AirlineDatabase airlinedb = new AirlineDatabase();
 	final int AIRLINE_CODENAME_MAX_LENGTH = 6;
 	
@@ -18,7 +14,6 @@ public class AirlineManagementSystem {
 	public void createAirline(String airlineCodename, String airlineCallsign, String airlineCountry) {
 		
 		try {
-		
 		
 			if (isAirlineDataUnique(airlineCodename) && isAirlineCodenameValid(airlineCodename)) {
 				Airline airline = new Airline(airlinedb.generateAirlineId(), airlineCodename, airlineCallsign, airlineCountry);

@@ -27,13 +27,12 @@ public class AirlineUpdateServlet extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		try {
-			if (true) {
+			if (session.getAttribute("user") != null) {
 				updateAirline(request, response);
 			}
 
 			else {
-				RequestDispatcher rd = request.getRequestDispatcher("login.html");
-				rd.forward(request, response);
+			response.sendRedirect("form/login.html");
 			}
 		}
 

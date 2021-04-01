@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import management.UserManagementSystem;
 
@@ -25,7 +26,16 @@ public class UserAddServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-		createUser(request, response);
+			
+			HttpSession session = request.getSession();
+			
+			if (session.getAttribute("user") != null) {
+				createUser(request, response);
+				
+			}
+			else {
+				response.sendRedirect("form/login.html");
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();

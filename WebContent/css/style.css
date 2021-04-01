@@ -1,918 +1,852 @@
-    html,
-    body {
-        width: 100%;
-        height: 100%;
-        margin: 0px;
-        padding: 0px;
-        overflow-x: hidden;
-    }
-    
-    body {
-        background-color: white;
-        width: 100vw;
-        background-image: url("../img/vbg.png");
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover;
-        opacity: 1;
-        animation: fadein 1 ease-in 0.2s;
-    }
-    
-    a [type="submit"] :hover,
-    input [type="submit"] :hover {
-        cursor: pointer;
-    }
-    
-    option {
-        font-weight: 600;
-    }
-    /* START OF HEADER */
-    /* Logo on left side of header */
-    
-    header #logo {
-        margin-left: 20px;
-        width: 130px;
-    }
-    
-    header #logo:hover {
-        filter: brightness(80%);
-        transition: .2s ease-out;
-    }
-    /* End of logo on left side of header */
-    
-    header {
-        /*   background-color: rgb(177, 177, 177);*/
-        background: rgb(252, 252, 252);
-        background: linear-gradient(180deg, rgba(252, 252, 252, 1) 0%, rgba(177, 177, 177, 1) 0%, rgba(255, 255, 255, 0.9640231092436975) 100%);
-        position: fixed;
-        display: flex;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 50px;
-        border-bottom: 2px #0c3581 solid;
-        border-radius: 1px;
-        z-index: 99;
-        margin-bottom: 100px;
-    }
-    /* Dropdown Button of navigation sections */
-    
-    .dropbtn {
-        background-color: rgba(0, 0, 0, 0);
-        border: none;
-        outline: none;
-        cursor: pointer;
-    }
-    /* The container <div> - needed to position the dropdown content */
-    
-    .dropdown {
-        position: relative;
-        display: inline-block;
-        width: auto;
-    }
-    /* Dropdown Content (Hidden by Default) */
-    
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: rgba(212, 212, 212, 0.4);
-        text-align: left;
-        min-width: 15px;
-        min-height: 15px;
-        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        border-radius: 10px;
-        z-index: 1;
-    }
-    /* Links inside the dropdown */
-    
-    .dropdown-content a {
-        color: black;
-        padding: 2px;
-        text-align: left;
-        text-decoration: none;
-        display: block;
-        margin: 10px;
-    }
-    /* Change color of dropdown links on hover */
-    
-    .dropdown-content a:hover {
-    
-        color: grey;
-        transition: .2s ease-out;
-    }
-    /* Show the dropdown menu on hover */
-    
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-    /* Change the background color of the dropdown button when the dropdown content is shown */
-    
-    .dropdown:hover .dropbtn {
-        color: grey;
-        border-bottom: 2px powderblue solid ;
-       
-    }
-    /* End of dropdown button */
-    /* Navbar sections (Create, List, Modify, Book) at center of header */
-    
-    .navbarsections {
-        position: relative;
-        width: 60%;
-        height: 18px;
-        margin-left: 50px;
-        padding: 15px 0px 15px;
-        top: 0;
-        left: 18%;
-        display: inline-block;
-    }
-    
-    .navbarsections a,
-    .navbarsections .dropbtn {
-        font-size: 20px;
-        text-decoration: none;
-        font-family: Bubbler One;
-        color: black;
-        font-weight: 600;
-        margin-right: 60px;
-        position: relative;
-        display: inline-block;
-        transition: .2s ease-out;
-    }
-    
-    header #settingsButton img {
-        position: fixed;
-        display: inline;
-        width: 20px;
-        height: auto;
-        top: 16px;
-        right: 140px;
-    }
-    /* Logout button on right side of the header */
-    
-    .logoutbtn {
-        position: fixed;
-        right: 60px;
-        top: 15px;
-        display: inline;
-        border-radius: 20px;
-        font-family: Bubbler one;
-        font-weight: 600;
-        background-color: transparent;
-        color: black;
-        outline: none;
-    }
-    
-    .logoutbtn:hover {
-        transition: .2s ease-out;
-        color: #333;
-        cursor: pointer;
-    }
-    /* End of logout button 
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	overflow-x: hidden;
+}
+
+body {
+	background-color: white;
+	width: 100vw;
+	background-image: url("../img/vbg.png");
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	opacity: 1;
+	animation: fadein 1 ease-in 0.2s;
+}
+
+a [type="submit"] :hover, input [type="submit"] :hover {
+	cursor: pointer;
+}
+
+option {
+	font-weight: 600;
+}
+/* START OF HEADER */
+/* Logo on left side of header */
+header #logo {
+	margin-left: 20px;
+	width: 130px;
+}
+
+header #logo:hover {
+	filter: brightness(80%);
+	transition: .2s ease-out;
+}
+/* End of logo on left side of header */
+header {
+	/*   background-color: rgb(177, 177, 177);*/
+	background: rgb(252, 252, 252);
+	background: linear-gradient(180deg, rgba(252, 252, 252, 1) 0%,
+		rgba(177, 177, 177, 1) 0%, rgba(255, 255, 255, 0.9640231092436975)
+		100%);
+	position: fixed;
+	display: flex;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 50px;
+	border-bottom: 2px #0c3581 solid;
+	border-radius: 1px;
+	z-index: 99;
+	margin-bottom: 100px;
+}
+/* Dropdown Button of navigation sections */
+.dropbtn {
+	background-color: rgba(0, 0, 0, 0);
+	border: none;
+	outline: none;
+	cursor: pointer;
+}
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+	position: relative;
+	display: inline-block;
+	width: auto;
+}
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: rgba(212, 212, 212, 0.4);
+	text-align: left;
+	min-width: 15px;
+	min-height: 15px;
+	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+	border-radius: 10px;
+	z-index: 1;
+}
+/* Links inside the dropdown */
+.dropdown-content a {
+	color: black;
+	padding: 2px;
+	text-align: left;
+	text-decoration: none;
+	display: block;
+	margin: 10px;
+}
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+	color: grey;
+	transition: .2s ease-out;
+}
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+	display: block;
+}
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+	color: grey;
+	border-bottom: 2px powderblue solid;
+}
+/* End of dropdown button */
+/* Navbar sections (Create, List, Modify, Book) at center of header */
+.navbarsections {
+	position: relative;
+	width: 900px;
+	height: 18px;
+	margin-left: 50px;
+	padding: 15px 0px 15px;
+	top: 0;
+	left: 240px;
+	display: inline-block;
+}
+
+.navbarsections a, .navbarsections .dropbtn {
+	font-size: 20px;
+	text-decoration: none;
+	font-family: Bubbler One;
+	color: black;
+	font-weight: 600;
+	margin-right: 60px;
+	position: relative;
+	display: inline-block;
+	transition: .2s ease-out;
+}
+
+header #settingsButton img {
+	position: fixed;
+	display: inline;
+	width: 20px;
+	height: auto;
+	top: 16px;
+	right: 140px;
+}
+/* Logout button on right side of the header */
+.logoutbtn {
+	position: fixed;
+	right: 60px;
+	top: 15px;
+	display: inline;
+	border-radius: 20px;
+	font-family: Bubbler one;
+	font-weight: 600;
+	background-color: transparent;
+	color: black;
+	outline: none;
+}
+
+.logoutbtn:hover {
+	transition: .2s ease-out;
+	color: #333;
+	cursor: pointer;
+}
+/* End of logout button 
                 * END OF HEADER 
                 * START OF PAGE FORM 
                 * Forms to create and modify airlines, airports and flights
                 */
-    
-    .airlineform,
-    .airportform {
-        font-family: Bubbler One;
-        color: #333;
-        font-weight: 600;
-        position: absolute;
-        top: 20%;
-        left: 19%;
-        width: 50%;
-        height: auto;
-        margin: auto;
-        text-align: center;
-        background-color: rgba(210, 210, 210, 0.8);
-        border: 2px grey solid;
-        border-radius: 10px;
-        padding: 5%;
-        box-shadow: 3px 3px 15px rgba(100, 100, 100, 0.7);
-    }
-    
-    .flightform {
-        font-family: Bubbler One;
-        color: #333;
-        font-weight: 600;
-        position: absolute;
-        top: 20%;
-        left: 19%;
-        width: 50%;
-        height: auto;
-        margin: auto;
-        text-align: center;
-        background-color: rgba(210, 210, 210, 0.8);
-        border: 2px grey solid;
-        border-radius: 10px;
-        padding: 5%;
-        box-shadow: 3px 3px 15px rgba(100, 100, 100, 0.7);
-    }
-    
-    #formHeading {
-        position: absolute;
-        font-family: Nunito, Bubbler One, Tahoma;
-        color: #555;
-        font-size: 26px;
-        text-align: center;
-        width: 100%;
-        top: 50px;
-    }
-    /* flightform splitted into two tables */
-    
-    .flightform .table1 {
-        width: 50%;
-        position: relative;
-        float: left;
-    }
-    
-    .flightform .table2 {
-        width: 50%;
-        position: relative;
-        float: left;
-    }
-    /* Input types located inside forms */
-    
-    .airlineform [type="text"],
-    .airportform [type="text"],
-    .flightform [type="text"],
-    .flightform [type="datetime-local"],
-    .flightform #flightClassSelect,
-    .flightform #airlineCodenameSelect,
-    .flightform #airportCodenameSelect,
-    .flightform #destinationAirportCodenameSelect,
-    .flightform #seatRowSelect,
-    .flightform [type="number"],
-    .airportform #airportTypeSelect,
-    .ticketReservationForm [type="text"],
-    .ticketReservationForm #flightIdSelect,
-    .ticketReservationForm [type="number"] {
-        font-family: Bubbler One, Verdana;
-        font-weight: 900;
-        border: 1px grey inset;
-        border-radius: 10px;
-        width: 200px;
-        height: 25px;
-        outline: 0;
-        background-color: #fafafa;
-        text-align: center;
-        text-transform: uppercase;
-         box-shadow: grey 3px 3px 8px;
-    }
-    
-    .loginform [type="text"],
-    .loginform [type="password"] {
-        font-family: Bubbler One, Verdana;
-        font-weight: 900;
-        border: 1px grey inset;
-        border-radius: 10px;
-        width: 200px;
-        height: 25px;
-        outline: 0;
-        background-color: #fafafa;
-        text-align: center;
-         box-shadow: grey 3px 3px 8px;
-    }
-    /* Submit buttons at the end of the form */
-    
-    .airlineform .buttonform,
-    .airportform .buttonform,
-    .loginform .buttonform,
-    .flightform .buttonform,
-    .ticketReservationForm .buttonform {
-        font-family: Bubbler One;
-        font-weight: 600;
-        font-size: 15px;
-        border-radius: 10px;
-        width: 15%;
-        height: 25px;
-        outline: 0;
-        cursor: pointer;
-        box-shadow: grey 3px 3px 8px;
-    }
-    /* avatar used for airline, airport and flight form*/
-    
-    .formavatar {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        width: 12%;
-        height: auto;
-        margin-top: -15%;
-        margin-left: 44%;
-        margin-bottom: 20px;
-        border: 2px grey solid;
-        border-radius: 50%;
-        background-color: rgb(238, 238, 238);
-    }
-    /* START OF LOGIN CONTAINER */
-    
-    .logincontainer {
-        position: absolute;
-        top: 20%;
-        width: 100%;
-        height: auto;
-        margin: auto;
-        padding: 0 35%;
-    }
-    
-    .loginform {
-        font-family: Bubbler One;
-        color: #333;
-        font-weight: 600;
-        position: relative;
-        background-color: rgba(210, 210, 210, 0.8);
-        border: 2px grey solid;
-        border-radius: 10px;
-        padding: 5%;
-        box-shadow: 3px 3px 15px rgba(100, 100, 100, 0.7);
-        text-align: center;
-        width: 20%;
-    }
-    
-    #loginavatar {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        width: 26%;
-        height: auto;
-        margin-top: -38%;
-        margin-left: 37%;
-        margin-bottom: 20px;
-        border: 2px grey solid;
-        border-radius: 50%;
-        background-color: rgb(238, 238, 238);
-    }
-    
-    .loginform a {
-        color: grey;
-        margin: 10px;
-        display: block;
-        font-family: Segoe ui;
-        padding-top: 10px;
-    }
-    
-    .createAccountInSettings {
-        position: relative;
-        top: 200px;
-        left: 36%;
-        width: 100%;
-    }
-    /* Heading 'h2' at AirlineList.jsp, AirportList.jsp and FlightList.jsp pages */
-    
-    #airlinelist,
-    #flightlist,
-    #airportlist {
-        position: relative;
-        display: inline-block;
-        top: 20;
-        width: 95%;
-        font-family: Bubbler One;
-        text-align: center;
-        padding: 20px;
-        margin-top: 50px;
-        font-size: 25px;
-    }
-    
-    .managementFunctions {
-    width:100%;
-    margin-bottom:30px;
-    
-    
-    }
-    
-    .managementFunctions #createAirlineBtn,
-    .managementFunctions #createAirportBtn,
-    .managementFunctions #createFlightBtn {
-     position:relative;
-    display:inline-block;
-    text-align: center;
-    padding: 5px;
-    box-shadow: 3px 3px 8px;
-   	left:90%;
- 	width:80px;
- 	height:30px;
-    font-size: 17px;
-    text-decoration: none;
-    font-weight:300;
-    background-color: rgba(79, 116, 197,0.9);
-    font-family: Bubbler One;
-    border-radius: 8px;
-    color:silver;
-    }
-    /* Table used for displaying data from database at AirlineList.jsp AriportList.jsp and FlightList.jsp pages*/
-    
-    .flightListTable table,
-    .flightListTable th,
-    .flightListTable td,
-    .airlineListTable table,
-    .airlineListTable th,
-    .airlineListTable td,
-    .airportListTable table,
-    .airportListTable th,
-    .airportListTable td {
-        border: 1px solid #333;
-        border-collapse: collapse;
-    }
-    
-    .flightListTable th,
-    .airportListTable th,
-    .airlineListTable th {
-        background-color: rgba(54, 54, 54, 0.6);
-        padding: 15px;
-        text-align: center;
-        font-family: Bubbler One, Verdana;
-        font-weight: 600;
-    }
-    
-    .flightListTable td,
-    .airportListTable td,
-    .airlineListTable td {
-        background-color: rgba(100, 100, 100, 0.5);
-        padding: 15px;
-        text-align: center;
-        font-family: Bubbler One, Verdana;
-        font-weight: 600;
-    }
-    
-    .flightListTable table,
-    .airportListTable table,
-    .airlineListTable table {
-        border-spacing: 5px;
-        background-color: rgba(100, 100, 100, 0.8);
-        border-radius: 6px;
-        width: 95%;
-        margin: 10px 0px;
-        box-shadow: grey 3px 3px 8px;
-        
-    }
-    /* Container of function buttons on table (Remove, Update, View) */
-    
-    .flightListTable .tablefunctions,
-    .airportListTable .tablefunctions,
-    .airlineListTable .tablefunctions {
-        position: relevant;
-        width: auto;
-        display: flex;
-        justify-content: center;
-        margin: auto;
-    }
-    /* individual function button */
-    
-    #remove [ type="submit"],
-    #update [ type="submit"],
-    #viewAirport [ type="submit"],
-    #viewFlight [ type="submit"],
-    #viewAirline [ type="submit"] {
-        float: left;
-        /* background-color: silver;*/
-        font-family: Bubbler One, Tahoma;
-        color: black;
-        font-weight: 600;
-        margin: 5px;
-        outline: none;
-        border-radius: 15px;
-        cursor: pointer;
-        
-    }
-    
+.airlineform, .airportform {
+	font-family: Bubbler One;
+	color: #333;
+	font-weight: 600;
+	position: absolute;
+	top: 20%;
+	left: 19%;
+	width: 50%;
+	height: auto;
+	margin: auto;
+	text-align: center;
+	background-color: rgba(210, 210, 210, 0.8);
+	border: 2px grey solid;
+	border-radius: 10px;
+	padding: 5%;
+	box-shadow: 3px 3px 15px rgba(100, 100, 100, 0.7);
+}
 
-    #remove [ type="submit"] {
-        background-color: rgba(214, 0, 0, 0.644);
-        color:silver;
-      
-    }
-    
-    #viewAirport [ type="submit"],
-    #viewAirline [ type="submit"],
-    #viewFlight [ type="submit"] {
-        background-color: rgb(79, 116, 197);
-        color:silver;
-      
-    }
-    /* End of table */
-    /* Main container at homepage (index.html) */
-    
-    .mainContainer {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        height: auto;
-        margin: auto;
-        padding-top: 120px;
-    }
-    
-    .mainContainer h1 {
-        position: absolute;
-        top: 50px;
-        text-align: center;
-        width: 100%;
-        font-family: Nunito, Bubbler One, Tahoma;
-        color: rgb(175, 175, 175);
-    }
-    /* Boxes at homepage */
-    
-    .mainContainer a {
-        position: relative;
-        float: left;
-        width: 15%;
-        height: 350px;
-        border: 1px grey;
-        border-radius: 25px;
-        box-shadow: 5px 5px 15px rgba(41, 41, 41, 0.7);
-        margin: 25px;
-        background-color: rgba(100, 100, 100, 0.8);
-        text-align: center;
-        font-family: Bubbler One, Verdana;
-        padding: 25px;
-        text-decoration: none;
-        color: black;
-    }
-    
-    .mainContainer a:hover {
-        background-color: rgba(26, 24, 24, 0.9);
-        color: silver;
-        animation: zoomin 1s 1;
-        transition: .5s ease-out;
-    }
-    
-    #homepageCreate p,
-    #homepageList p,
-    #homepageModify p,
-    #homepageBook p {
-        position: relative;
-        width: 100%;
-        top: 50px;
-        font-size: 17px;
-        
-    }
-    /* End of main container at homepage */
-    /* START OF BOOK A FLIGHT CONTAINER */
-    
-    .bookAFlightContainer1 {
-        margin: 50px 5px;
-        position: absolute;
-        display: inline-block;
-        width: 100%;
-        height: 100%;
-    }
-    /* Form used in order to preview ticket info before booking */
-    
-    .ticketPreview {
-        background-color: white;
-        width: 70%;
-        height: 400px;
-        position: relative;
-        top: 100px;
-        left: 15%;
-        padding: 0px;
-        margin-top: 50px;
-        margin-bottom: 100px;
-        display: flex;
-        justify-content: left;
-        border-radius: 20px;
-        color: #333;
-        box-shadow: 5px 5px 5px rgba(75, 75, 75, 0.404);
-    }
-    /* Airplane icon on ticket preview form between FROM and TO airports*/
-    
-    .ticketPreview .ticketPreviewAirplaneIcon {
-        position: relative;
-        top: 50px;
-        left: 53%;
-        width: 75px;
-        height: 75px;
-    }
-    
-    .ticketPreview .barcode {
-        position: relative;
-        width: 40px;
-        height: auto;
-        margin: 5px 5px 5px -40px;
-        padding: 0%;
-    }
-    /* Form splitted into two tables
+.flightform {
+	font-family: Bubbler One;
+	color: #333;
+	font-weight: 600;
+	position: absolute;
+	top: 20%;
+	left: 19%;
+	width: 50%;
+	height: auto;
+	margin: auto;
+	text-align: center;
+	background-color: rgba(210, 210, 210, 0.8);
+	border: 2px grey solid;
+	border-radius: 10px;
+	padding: 5%;
+	box-shadow: 3px 3px 15px rgba(100, 100, 100, 0.7);
+}
+
+#formHeading {
+	position: absolute;
+	font-family: Nunito, Bubbler One, Tahoma;
+	color: #555;
+	font-size: 26px;
+	text-align: center;
+	width: 100%;
+	top: 50px;
+}
+/* flightform splitted into two tables */
+.flightform .table1 {
+	width: 50%;
+	position: relative;
+	float: left;
+}
+
+.flightform .table2 {
+	width: 50%;
+	position: relative;
+	float: left;
+}
+/* Input types located inside forms */
+.airlineform [type="text"], .airportform [type="text"], .flightform [type="text"],
+	.flightform [type="datetime-local"], .flightform #flightClassSelect,
+	.flightform #airlineCodenameSelect, .flightform #airportCodenameSelect,
+	.flightform #destinationAirportCodenameSelect, .flightform #seatRowSelect,
+	.flightform [type="number"], .airportform #airportTypeSelect,
+	.ticketReservationForm [type="text"], .ticketReservationForm #flightIdSelect,
+	.ticketReservationForm [type="number"] {
+	font-family: Bubbler One, Verdana;
+	font-weight: 900;
+	border: 1px grey inset;
+	border-radius: 10px;
+	width: 200px;
+	height: 25px;
+	outline: 0;
+	background-color: #fafafa;
+	text-align: center;
+	text-transform: uppercase;
+	box-shadow: grey 3px 3px 8px;
+}
+
+ .ticketReservationForm #flightIdSelect,
+	.ticketReservationForm [type="number"] {
+	margin-bottom: 10px;
+	}
+
+
+
+.loginform [type="text"], .loginform [type="password"] {
+	font-family: Bubbler One, Verdana;
+	font-weight: 900;
+	border: 1px grey inset;
+	border-radius: 10px;
+	width: 200px;
+	height: 25px;
+	outline: 0;
+	background-color: #fafafa;
+	text-align: center;
+	box-shadow: grey 3px 3px 8px;
+}
+/* Submit buttons at the end of the form */
+.airlineform .buttonform, .airportform .buttonform, .loginform .buttonform,
+	.flightform .buttonform, .ticketReservationForm .buttonform {
+	font-family: Bubbler One;
+	font-weight: 600;
+	font-size: 15px;
+	border-radius: 10px;
+	width: 50px;
+	height: 25px;
+	outline: 0;
+	cursor: pointer;
+	box-shadow: grey 3px 3px 8px;
+}
+
+.ticketReservationForm .buttonForm {
+	
+	margin:20px;
+}
+/* avatar used for airline, airport and flight form*/
+.formavatar {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	width: 12%;
+	height: auto;
+	margin-top: -15%;
+	margin-left: 44%;
+	margin-bottom: 20px;
+	border: 2px grey solid;
+	border-radius: 50%;
+	background-color: rgb(238, 238, 238);
+}
+/* START OF LOGIN CONTAINER */
+.logincontainer {
+	position: absolute;
+	justify-content:center;
+	top: 20%;
+	width: 100%;
+	height: auto;
+	margin: auto;
+	padding: 0 29%;
+}
+
+.loginform {
+	font-family: Bubbler One;
+	color: #333;
+	font-weight: 600;
+	position: relative;
+	background-color: rgba(210, 210, 210, 0.8);
+	border: 2px grey solid;
+	border-radius: 10px;
+	padding: 5%;
+	box-shadow: 3px 3px 15px rgba(100, 100, 100, 0.7);
+	text-align: center;
+	width: 400px;
+}
+
+#loginavatar {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	width: 105px;
+	height: auto;
+	margin-top: -140px;
+	margin-left: 147px;
+	margin-bottom: 20px;
+	border: 2px grey solid;
+	border-radius: 50%;
+	background-color: rgb(238, 238, 238);
+}
+
+.loginform a {
+	color: grey;
+	margin: 10px;
+	display: block;
+	font-family: Segoe ui;
+	padding-top: 10px;
+}
+
+.createAccountInSettings {
+	position: relative;
+	top: 200px;
+	left: 36%;
+	width: 100%;
+}
+/* Heading 'h2' at AirlineList.jsp, AirportList.jsp and FlightList.jsp pages */
+#airlinelist, #flightlist, #airportlist {
+	position: relative;
+	display: inline-block;
+	top: 20;
+	width: 95%;
+	font-family: Bubbler One;
+	text-align: center;
+	padding: 20px;
+	margin-top: 50px;
+	font-size: 25px;
+}
+
+.managementFunctions {
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+.managementFunctions #createAirlineBtn, .managementFunctions #createAirportBtn,
+	.managementFunctions #createFlightBtn {
+	position: relative;
+	display: inline-block;
+	text-align: center;
+	padding: 5px;
+	box-shadow: 3px 3px 8px;
+	left: 90%;
+	width: 80px;
+	height: 30px;
+	font-size: 17px;
+	text-decoration: none;
+	font-weight: 300;
+	background-color: rgba(79, 116, 197, 0.9);
+	font-family: Bubbler One;
+	border-radius: 8px;
+	color: silver;
+}
+/* Table used for displaying data from database at AirlineList.jsp AriportList.jsp and FlightList.jsp pages*/
+.flightListTable table, .flightListTable th, .flightListTable td,
+	.airlineListTable table, .airlineListTable th, .airlineListTable td,
+	.airportListTable table, .airportListTable th, .airportListTable td {
+	border: 1px solid #333;
+	border-collapse: collapse;
+}
+
+.flightListTable th, .airportListTable th, .airlineListTable th {
+	background-color: rgba(54, 54, 54, 0.6);
+	padding: 15px;
+	text-align: center;
+	font-family: Bubbler One, Verdana;
+	font-weight: 600;
+}
+
+.flightListTable td, .airportListTable td, .airlineListTable td {
+	background-color: rgba(100, 100, 100, 0.5);
+	padding: 15px;
+	text-align: center;
+	font-family: Bubbler One, Verdana;
+	font-weight: 600;
+}
+
+.flightListTable table, .airportListTable table, .airlineListTable table
+	{
+	border-spacing: 5px;
+	background-color: rgba(100, 100, 100, 0.8);
+	border-radius: 6px;
+	width: 95%;
+	margin: 10px 0px;
+	box-shadow: grey 3px 3px 8px;
+}
+/* Container of function buttons on table (Remove, Update, View) */
+.flightListTable .tablefunctions, .airportListTable .tablefunctions,
+	.airlineListTable .tablefunctions {
+	position: relevant;
+	width: auto;
+	display: flex;
+	justify-content: center;
+	margin: auto;
+}
+/* individual function button */
+#remove [type="submit"], #update [type="submit"], #viewAirport [type="submit"],
+	#viewFlight [type="submit"], #viewAirline [type="submit"] {
+	float: left;
+	/* background-color: silver;*/
+	font-family: Bubbler One, Tahoma;
+	color: black;
+	font-weight: 600;
+	margin: 5px;
+	outline: none;
+	border-radius: 15px;
+	cursor: pointer;
+}
+
+#remove [type="submit"] {
+	background-color: rgba(214, 0, 0, 0.644);
+	color: silver;
+}
+
+#viewAirport [type="submit"], #viewAirline [type="submit"], #viewFlight [type="submit"]
+	{
+	background-color: rgb(79, 116, 197);
+	color: silver;
+}
+/* End of table */
+/* Main container at homepage (index.html) */
+.mainContainer {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: auto;
+	margin: auto;
+	padding-top: 120px;
+}
+
+.mainContainer h1 {
+	position: absolute;
+	top: 50px;
+	text-align: center;
+	width: 100%;
+	font-family: Nunito, Bubbler One, Tahoma;
+	color: rgb(175, 175, 175);
+}
+/* Boxes at homepage */
+.mainContainer a {
+	position: relative;
+	float: left;
+	width: 15%;
+	height: 350px;
+	border: 1px grey;
+	border-radius: 25px;
+	box-shadow: 5px 5px 15px rgba(41, 41, 41, 0.7);
+	margin: 25px;
+	background-color: rgba(100, 100, 100, 0.8);
+	text-align: center;
+	font-family: Bubbler One, Verdana;
+	padding: 25px;
+	text-decoration: none;
+	color: black;
+}
+
+.mainContainer a:hover {
+	background-color: rgba(26, 24, 24, 0.9);
+	color: silver;
+	animation: zoomin 1s 1;
+	transition: .5s ease-out;
+}
+
+#homepageCreate p, #homepageList p, #homepageModify p, #homepageBook p {
+	position: relative;
+	width: 100%;
+	top: 50px;
+	font-size: 17px;
+}
+/* End of main container at homepage */
+/* START OF BOOK A FLIGHT CONTAINER */
+.bookAFlightContainer1 {
+	margin: 50px 5px;
+	position: absolute;
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+}
+/* Form used in order to preview ticket info before booking */
+
+.ticketPreviewContainer {
+	position:absolute;
+	margin:50px 0px;
+	display:flex;
+	width:100%;
+	justify-content:center;
+}
+.ticketPreview {
+	background-color: white;
+	width: 1110px;
+	height: 400px;
+	position: relative;
+	top: 50px;
+	padding: 0px;
+	margin-top: 50px;
+	margin-bottom: 100px;
+	display: flex;
+	justify-content: left;
+	border-radius: 20px;
+	color: #333;
+	box-shadow: 5px 5px 5px rgba(75, 75, 75, 0.404);
+}
+/* Airplane icon on ticket preview form between FROM and TO airports*/
+.ticketPreview .ticketPreviewAirplaneIcon {
+	position: relative;
+	top: 50px;
+	left: 53%;
+	width: 75px;
+	height: 75px;
+}
+
+.ticketPreview .barcode {
+	position: relative;
+	width: 40px;
+	height: auto;
+	margin: 5px 5px 5px -40px;
+	padding: 0%;
+}
+/* Form splitted into two tables
             *FIRST TABLE */
-    
-    .ticketPreview .ticketPreviewTable1 {
-        background-image: url("../img/ticketpreviewtable1bgr.jpg");
-        opacity: 0.9;
-        /* background-color: rgba(224, 224, 224, 0.973);*/
-        width: 80%;
-        position: relative;
-        display: flex;
-        left: 0;
-        border-top-left-radius: 20px;
-        border-bottom-left-radius: 20px;
-        font-family: Bubbler One, Verdana;
-    }
-    /* "FROM" airport */
-    
-    .ticketPreview .ticketPreviewTable1 h2 {
-        writing-mode: vertical-rl;
-        text-orientation: upright;
-        text-align: center;
-        color: rgba(117, 142, 150, 0.555);
-        margin: 20px 10px 10px 0px;
-    }
-    /* other data in table1*/
-    
-    .ticketPreview .ticketPreviewTable1 h5 {
-        font-size: 27px;
-        margin: 2px 70px;
-        padding: 0px;
-    }
-    
-    .ticketPreview .ticketPreviewTable1 .table1left {
-        width: 50%;
-    }
-    
-    .ticketPreview .ticketPreviewTable1 .table1right {
-        width: 50%;
-    }
-    /* Table 1 splitted into two tables*/
-    /*table1left form displaying FROM, NAME, FLIGHTID, DATE, PRICE */
-    
-    .ticketPreview .ticketPreviewTable1 .table1left h3 {
-        font-size: 50px;
-        text-align: center;
-        font-family: Tahoma;
-        padding: 30px;
-        margin: 10px;
-        color: #444;
-    }
-    /*table1right form displaying TO, AIRLINE, SEAT, NUMBER, FLIGHT CLASS*/
-    
-    .ticketPreview .ticketPreviewTable1 .table1right h3 {
-        font-family: Tahoma;
-        font-size: 50px;
-        text-align: center;
-        padding: 0px;
-        margin: 40px;
-        color: #444;
-    }
-    /*TABLE 2*/
-    
-    .ticketPreview .ticketPreviewTable2 {
-        background-image: url("../img/table1bgr3.jpg");
-        background-position-x: -100px;
-        background-position-y: 40px;
-        width: 20%;
-        border-top-right-radius: 20px;
-        border-bottom-right-radius: 20px;
-        border-left: rgba(224, 224, 224, 0.973) 5px dashed;
-        position: relative;
-        padding: 2px;
-    }
-    /* heading (Boarding Pass) */
-    
-    .ticketPreview .ticketPreviewTable2 h3 {
-        text-align: center;
-        font-family: 'Courier New', Courier, monospace;
-    }
-    /* other flight data in table 2 */
-    
-    .ticketPreview .ticketPreviewTable2 h5 {
-        font-family: Bubbler One;
-        font-size: 20px;
-        display: inline;
-        margin: 10px;
-    }
-    
-    .ticketPreview .ticketPreviewTable2 label {
-        font-weight: 600;
-        color: white;
-        font-size: 15px;
-        font-family: Bubbler One;
-        margin-left: 10px;
-    }
-    /* TICKET RESERVATION CONTAINER*/
-    
-    .ticketReservation {
-        display: inline-block;
-        left: 1.5%;
-        top: 700px;
-        margin-top: 20px;
-        width: 97%;
-        height: 70%;
-        padding: 50px 0px;
-    }
-    /*Form for booking ticket */
-    
-    .ticketReservationForm {
-        position: relative;
-        float: left;
-        width: 50%;
-        height: 90%;
-        font-family: Bubbler One, Tahoma;
-        color: #333;
-        font-weight: 900;
-        text-align: center;
-        padding: 25px;
-        border-radius: 6px;
-    }
-    
-    .ticketReservationForm1 {
-        position: relative;
-        float: left;
-        width: 50%;
-        height: 90%;
-        left: 25%;
-        background-color: #ebebeb;
-        font-family: Bubbler One, Tahoma;
-        color: #333;
-        font-weight: 900;
-        text-align: center;
-        padding: 25px;
-        border-radius: 6px;
-        box-shadow: 5px 5px 15px rgba(100, 100, 100, 0.7);
-    }
-    /* Visual seat availability preview */
-    
-    .ticketReservationSeatPreview {
-        float: right;
-        position: relative;
-        background-color: rgb(250, 250, 250);
-        width: 35%;
-        height: 90%;
-        border-left: 4px grey solid;
-        border-bottom-left-radius: 25% 100%;
-        border-bottom-right-radius: 25% 100%;
-        border-top-left-radius: 25% 100%;
-        border-top-right-radius: 25% 100%;
-        padding: 25px;
-        margin: 0 25px;
-        display: flex;
-        box-shadow: 5px 5px 15px rgba(100, 100, 100, 0.7);
-    }
-    /* image used in seat availability preview */
-    
-    .ticketReservationSeatPreview .seatIconTable #seatIcon {
-        position: relative;
-        margin: 5px;
-        max-width: 70%;
-        max-height: auto;
-        overflow: auto;
-    }
-    
-    .ticketReservationSeatPreview .seatIconTable {
-        position: relative;
-        max-width: 80%;
-        max-height: 100%;
-        margin: 0 10%;
-        padding: 15px;
-        display: inline-block;
-        overflow: auto;
-    }
-    
-    .seatIconTable tr {
-        position: relative;
-        max-width: 10%;
-        max-height: 100%;
-        /*	display:block;*/
-        float: left;
-        margin: 0 5px;
-        left: 10%;
-    }
-    
-    .seatIconTable td {
-        display: block;
-        width: auto;
-        height: auto;
-    }
-    /* END OF TICKET RESERVATION CONTAINER*/
-    
-    .viewAirlineContainer {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        margin: 0;
-        padding: 0;
-        top: 0%;
-        width: 100%;
-        height: auto;
-        display: inline-block;
-    }
-    
-    .airlineDataPreview {
-        position: relative;
-        width: 100%;
-        height: 736px;
-        background-image: url("../img/airlineprev.png");
-    }
-    
-    .airlineDataPreview p {
-        position: relative;
-        top: 180px;
-        left: 100px;
-        font-family: Rationale, Verdana;
-        font-size: 43px;
-        color: rgb(95, 122, 172);
-    }
-    
-    .airlineFlightsTable {
-        position: relative;
-        margin: 70px 0px;
-        width: 100%;
-        height: auto;
-    }
-    /* link from table (airline codename, flight id and airport codename)*/
-    
-    .flightListTable #airlineFromList [ type="submit"],
-    .flightListTable #airportFromList [ type="submit"],
-    .flightListTable #destinationAirportFromList [ type="submit"],
-    .flightListTable #viewFlightID [type="submit"],
-    .airlineListTable #airlineFromList [ type="submit"],
-    .airportListTable #airportFromList [ type="submit"] {
-        text-decoration: underline;
-        font-family: Bubbler One;
-        background-color: transparent;
-        font-weight: 600;
-        border: none;
-        font-size: 17px;
-        outline: none;
-        margin: 20px 0px;
-        cursor: pointer;
-    }
-    
-    .flightTicketTable {
-        clear: both;
-        display: inline-block;
-        position: relative;
-        width: 100%;
-        top: 90%;
-        display: block;
-        margin: 20px 0px;
-    }
-    
-    .viewAirportContainer {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        margin: 0;
-        padding: 0;
-        top: 50px;
-        left: 0px;
-        right: 0px;
-        width: 100%;
-        height: auto;
-        display: inline-block;
-    }
-    
-    .airportDataPreview {
-        position: relative;
-        width: 100%;
-        height: 1000px;
-        top: -50px;
-        background-image: url("../img/airportprev.jpg");
-    }
-    
-    .airportDataPreview p {
-        position: relative;
-        top: 180px;
-        left: 100px;
-        font-family: Rationale, Verdana;
-        font-size: 43px;
-        color: rgb(95, 122, 172);
-        margin-top: 50px;
-    }
-    
-    .airportFlightsTable {
-        position: relative;
-        margin: 70px 0px;
-        width: 100%;
-        height: auto;
-    }
-    
-    .airportFlightsTable h4 {
-        text-align: center;
-        color: rgb(95, 122, 172);
-        font-size: 22px;
-        font-family: Bubbler One;
-    }
-    
-    .clearfix::after {
-        clear: both;
-        display: table;
-    }
-    
-    @keyframes zoomin {
-        0% {
-            -webkit-transform: scale(1);
-        }
-        100% {
-            -webkit-transform: scale(1.05);
-        }
-    }
-    
-    @keyframes fadein {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
+.ticketPreview .ticketPreviewTable1 {
+	background-image: url("../img/ticketpreviewtable1bgr.jpg");
+	opacity: 0.9;
+	/* background-color: rgba(224, 224, 224, 0.973);*/
+	width: 80%;
+	position: relative;
+	display: flex;
+	left: 0;
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+	font-family: Bubbler One, Verdana;
+}
+/* "FROM" airport */
+.ticketPreview .ticketPreviewTable1 h2 {
+	writing-mode: vertical-rl;
+	text-orientation: upright;
+	text-align: center;
+	color: rgba(117, 142, 150, 0.555);
+	margin: 20px 10px 10px 0px;
+}
+/* other data in table1*/
+.ticketPreview .ticketPreviewTable1 h5 {
+	font-size: 27px;
+	margin: 2px 70px;
+	padding: 0px;
+}
+
+.ticketPreview .ticketPreviewTable1 .table1left {
+	width: 50%;
+}
+
+.ticketPreview .ticketPreviewTable1 .table1right {
+	width: 50%;
+}
+/* Table 1 splitted into two tables*/
+/*table1left form displaying FROM, NAME, FLIGHTID, DATE, PRICE */
+.ticketPreview .ticketPreviewTable1 .table1left h3 {
+	font-size: 50px;
+	text-align: center;
+	font-family: Tahoma;
+	padding: 30px;
+	margin: 10px;
+	color: #444;
+}
+/*table1right form displaying TO, AIRLINE, SEAT, NUMBER, FLIGHT CLASS*/
+.ticketPreview .ticketPreviewTable1 .table1right h3 {
+	font-family: Tahoma;
+	font-size: 50px;
+	text-align: center;
+	padding: 0px;
+	margin: 40px;
+	color: #444;
+}
+/*TABLE 2*/
+.ticketPreview .ticketPreviewTable2 {
+	background-image: url("../img/table1bgr3.jpg");
+	background-position-x: -100px;
+	background-position-y: 40px;
+	width: 20%;
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+	border-left: rgba(224, 224, 224, 0.973) 5px dashed;
+	position: relative;
+	padding: 2px;
+}
+/* heading (Boarding Pass) */
+.ticketPreview .ticketPreviewTable2 h3 {
+	text-align: center;
+	font-family: 'Courier New', Courier, monospace;
+}
+/* other flight data in table 2 */
+.ticketPreview .ticketPreviewTable2 h5 {
+	font-family: Bubbler One;
+	font-size: 20px;
+	display: inline;
+	margin: 10px;
+}
+
+.ticketPreview .ticketPreviewTable2 label {
+	font-weight: 600;
+	color: white;
+	font-size: 15px;
+	font-family: Bubbler One;
+	margin-left: 10px;
+}
+/* TICKET RESERVATION CONTAINER*/
+.ticketReservation {
+	position:absolute;
+	display: inline-block;
+	left: 1.5%;
+	top: 700px;
+	margin-top: 20px;
+	width: 97%;
+	height: 600px;
+	padding: 50px 0px;
+}
+/*Form for booking ticket */
+.ticketReservationForm {
+	position: relative;
+	float: left;
+	width: 50%;
+	height: 90%;
+	font-family: Bubbler One, Tahoma;
+	color: #333;
+	font-weight: 900;
+	text-align: center;
+	padding: 50px 25px;
+	border-radius: 6px;
+}
+
+.ticketReservationForm1 {
+	position: relative;
+	float: left;
+	width: 50%;
+	height: 80%;
+	left: 25%;
+	background-color: #ebebeb;
+	font-family: Bubbler One, Tahoma;
+	color: #333;
+	font-weight: 900;
+	text-align: center;
+	padding-top: 50px;
+	border-radius: 6px;
+	box-shadow: 5px 5px 15px rgba(100, 100, 100, 0.7);
+}
+/* Visual seat availability preview */
+.ticketReservationSeatPreview {
+	float: right;
+	position: relative;
+	background-color: rgb(250, 250, 250);
+	width: 35%;
+	height: 90%;
+	border-left: 4px grey solid;
+	border-bottom-left-radius: 25% 100%;
+	border-bottom-right-radius: 25% 100%;
+	border-top-left-radius: 25% 100%;
+	border-top-right-radius: 25% 100%;
+	padding: 25px;
+	margin: 0 25px;
+	display: flex;
+	box-shadow: 5px 5px 15px rgba(100, 100, 100, 0.7);
+}
+/* image used in seat availability preview */
+.ticketReservationSeatPreview .seatIconTable #seatIcon {
+	position: relative;
+	margin: 5px;
+	max-width: 90%;
+	max-height: auto;
+	overflow: auto;
+}
+
+.ticketReservationSeatPreview .seatIconTable {
+	position: relative;
+	max-width: 80%;
+	max-height: 100%;
+	margin: 0 10%;
+	padding: 15px;
+	display: inline-block;
+	overflow: auto;
+}
+
+.seatIconTable tr {
+	position: relative;
+	max-width: 10%;
+	max-height: 100%;
+	/*	display:block;*/
+	float: left;
+	margin: 0 10px;
+	left: 9%;
+}
+
+.seatIconTable td {
+	display: block;
+	width: auto;
+	height: auto;
+}
+/* END OF TICKET RESERVATION CONTAINER*/
+.viewAirlineContainer {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+	top: 0%;
+	width: 100%;
+	height: auto;
+	display: inline-block;
+}
+
+.airlineDataPreview {
+	position: relative;
+	width: 100%;
+	height: 736px;
+	background-image: url("../img/airlineprev.png");
+}
+
+.airlineDataPreview p {
+	position: relative;
+	top: 180px;
+	left: 100px;
+	font-family: Rationale, Verdana;
+	font-size: 43px;
+	color: rgb(95, 122, 172);
+}
+
+.airlineFlightsTable {
+	position: relative;
+	margin: 70px 0px;
+	width: 100%;
+	height: auto;
+}
+/* link from table (airline codename, flight id and airport codename)*/
+.flightListTable #airlineFromList [type="submit"], .flightListTable #airportFromList [type="submit"],
+	.flightListTable #destinationAirportFromList [type="submit"],
+	.flightListTable #viewFlightID [type="submit"], .airlineListTable #airlineFromList [type="submit"],
+	.airportListTable #airportFromList [type="submit"] {
+	text-decoration: underline;
+	font-family: Bubbler One;
+	background-color: transparent;
+	font-weight: 600;
+	border: none;
+	font-size: 17px;
+	outline: none;
+	margin: 20px 0px;
+	cursor: pointer;
+}
+
+.flightTicketTable {
+	position:absolute;
+	clear: both;
+	display: inline-block;
+	
+	width: 100%;
+	top:1500px;
+	display: block;
+	margin: 20px 0px;
+}
+
+.viewAirportContainer {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+	top: 50px;
+	left: 0px;
+	right: 0px;
+	width: 100%;
+	height: auto;
+	display: inline-block;
+}
+
+.airportDataPreview {
+	position: relative;
+	width: 100%;
+	height: 1000px;
+	top: -50px;
+	background-image: url("../img/airportprev.jpg");
+}
+
+.airportDataPreview p {
+	position: relative;
+	top: 180px;
+	left: 100px;
+	font-family: Rationale, Verdana;
+	font-size: 43px;
+	color: rgb(95, 122, 172);
+	margin-top: 50px;
+}
+
+.airportFlightsTable {
+	position: relative;
+	margin: 70px 0px;
+	width: 100%;
+	height: auto;
+}
+
+.airportFlightsTable h4 {
+	text-align: center;
+	color: rgb(95, 122, 172);
+	font-size: 22px;
+	font-family: Bubbler One;
+}
+
+.clearfix::after {
+	clear: both;
+	display: table;
+}
+
+@keyframes zoomin { 0% {
+	-webkit-transform: scale(1);
+}
+	100%
+{
+-webkit-transform :scale(1.05);
+}
+}
+@keyframes fadein {
+	from { 
+		opacity:0;	
+}
+	to {
+		opacity: 1;
+}
+}

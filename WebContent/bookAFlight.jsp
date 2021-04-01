@@ -55,21 +55,21 @@
 				
 			</div>
 
-			<a id="settingsButton" href="../settings.jsp"> <img
-				src="../img/icons/settingsIcon.ico"></a>
+			<a id="settingsButton" href="settings.jsp"> <img
+				src="img/icons/settingsIcon.ico"></a>
 
 			<form class="logoutButton" action="LogoutServlet" method="GET">
 				<button class="logoutbtn">Log out!</button>
 			</form>
 		</div>
 	</header>
-
+	<div class="ticketPreviewContainer">
 	<div class="ticketPreview">
 
 		<% Flight flight = (Flight)request.getAttribute("flightData"); %>
 
 		<% Date date = new Date();  
-SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy hh:mm");  
+SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm");  
 String strDate= formatter.format(date);  
  %>
 		<div class="ticketPreviewTable1">
@@ -171,7 +171,7 @@ String strDate= formatter.format(date);
 
 
 
-
+</div>
 	</div>
 
 
@@ -187,29 +187,16 @@ String strDate= formatter.format(date);
 				<%! FlightManagementSystem flightms = new FlightManagementSystem();%>
                 <%!	ArrayList <Flight> flightFromList =  flightms.getListOfFlights();%>
 			
-				<label for="flightID">Flight ID:</label><br> 
+				<label for="flightID">Flight ID:</label><br/> 
 				<select name="flightID" id="flightIdSelect">
 					
-					<% for(int i = 0; i < flightFromList.size(); i++) {
-                			if ( flightFromList.get(i).getFlightId() == flight.getFlightId()) {  %>
 								<option value=<%= flight.getFlightId()%> selected><%= flight.getFlightId()%> 
 								<%=flight.getAirport().getAirportCodename()%> 
 								<%=flight.getDestinationAirport().getAirportCodename() %></option>
 							
-                			  <% } else { %>
-							<!--  <option value=<%= flightFromList.get(i).getFlightId()%>><%= flightFromList.get(i).getFlightId()%> 
-								<%= flightFromList.get(i).getAirport().getAirportCodename() %>
-								<%= flightFromList.get(i).getDestinationAirport().getAirportCodename() %></option>                          -->	
-
-					<% 
-                		}
-                	}
-                	
-                	%>
+              
 				</select>
-				<br> <label for="name">Name:</label><br> <input
-					type="text" name="name" /> <br />
-				<br> <label for="seatRow">SEAT ROW:</label><br> 
+				<br/> <label for="seatRow">SEAT ROW:</label><br/> 
 					<select name="seatRow" id="flightIdSelect"> 
 					
 					<% for(char i = 'A' ; i <= flight.getSeatRow(); i++ ) { %>
@@ -221,8 +208,7 @@ String strDate= formatter.format(date);
 					
 						
 					</select>
-					<br />
-				<br /> <label for="seatNumber">SEAT NUMBER:</label><br> 
+				<br/> <label for="seatNumber">SEAT NUMBER:</label><br/> 
 				<select name="seatNumber" id="flightIdSelect">
 				
 				<% for (int i=1; i <= flight.getSeatNumber(); i++) { %>
@@ -233,9 +219,11 @@ String strDate= formatter.format(date);
 				<% } %>
 				</select>
 				
+				<br/> <label for="name">Name:</label><br/> <input
+					type="text" name="name" /> <br/>
 				
 				
-				<br /> <input class="buttonform" type="submit" value="Create" />
+				<br/> <br/> <input class="buttonform" type="submit" value="Create" />
 
 			</form>
 
@@ -255,13 +243,13 @@ String strDate= formatter.format(date);
 					<% 
 					for(int i=0; i < listOfSeats.size();i++) {
 
-						if(listOfSeats.get(i).getFlightId()==flight.getFlightId()) {
+						if(listOfSeats.get(i).getFlight().getFlightId()==flight.getFlightId()) {
 					
 							
 						%>
 
 					<td>
-						<% 	 if(bft.isSeatAvailable(listOfSeats.get(i).getFlightId(),listOfSeats.get(i).getSeatRow(), listOfSeats.get(i).getSeatNumber())){ %>
+						<% 	 if(bft.isSeatAvailable(listOfSeats.get(i))){ %>
 						<img id="seatIcon"
 						title="<%=listOfSeats.get(i).getSeatRow()%> 
 							  <%=listOfSeats.get(i).getSeatNumber()%>"
@@ -335,15 +323,15 @@ String strDate= formatter.format(date);
  						ArrayList <FlightTicket> fetchDataToList =  bft.fetchFlightTicketDatabaseContentToList();  
  						for (int i=0; i <=fetchDataToList.size(); i++) 
  						
- 						{   if(fetchDataToList.get(i).getFlightId() == flight.getFlightId()) {     %>
+ 						{   if(fetchDataToList.get(i).getFlight().getFlightId() == flight.getFlightId()) {     %>
 
                                           <td>
 						<form id="viewFlightID" action="BookAFlight" method="GET"
 							name="vievFlightId">
 							<input type="hidden" name="product_id"
-								value="<%=fetchDataToList.get(i).getFlightId()%>" /> <input
+								value="<%=fetchDataToList.get(i).getFlight().getFlightId()%>" /> <input
 								type="submit" name="view"
-								value="<%=fetchDataToList.get(i).getFlightId()%>" />
+								value="<%=fetchDataToList.get(i).getFlight().getFlightId()%>" />
 						</form>
 
 					</td>
@@ -351,9 +339,9 @@ String strDate= formatter.format(date);
 						<form id="airlineFromList" action="AirlinePreviewServlet"
 							method="GET" name="airlineFromList">
 							<input type="hidden" name="product_id"
-								value="<%=fetchDataToList.get(i).getAirline().getAirlineCodename()%>" />
+								value="<%=fetchDataToList.get(i).getFlight().getAirline().getAirlineCodename()%>" />
 							<input type="submit" name="airline"
-								value="<%=fetchDataToList.get(i).getAirline().getAirlineCodename()%>" />
+								value="<%=fetchDataToList.get(i).getFlight().getAirline().getAirlineCodename()%>" />
 						</form>
 
 					</td>
@@ -362,9 +350,9 @@ String strDate= formatter.format(date);
 						<form id="airportFromList" action="AirportPreviewServlet"
 							method="GET" name="airportFromList">
 							<input type="hidden" name="product_id"
-								value="<%=fetchDataToList.get(i).getAirport().getAirportCodename()%>" />
+								value="<%=fetchDataToList.get(i).getFlight().getAirport().getAirportCodename()%>" />
 							<input type="submit" name="airport"
-								value="<%=fetchDataToList.get(i).getAirport().getAirportCodename()%>" />
+								value="<%=fetchDataToList.get(i).getFlight().getAirport().getAirportCodename()%>" />
 						</form>
 
 					</td>
@@ -374,26 +362,26 @@ String strDate= formatter.format(date);
 							action="AirportPreviewServlet" method="GET"
 							name="destinationAirportFromList">
 							<input type="hidden" name="product_id"
-								value="<%=fetchDataToList.get(i).getDestinationAirport().getAirportCodename()%>" />
+								value="<%=fetchDataToList.get(i).getFlight().getDestinationAirport().getAirportCodename()%>" />
 							<input type="submit" name="destinationAirport"
-								value="<%=fetchDataToList.get(i).getDestinationAirport().getAirportCodename()%>" />
+								value="<%=fetchDataToList.get(i).getFlight().getDestinationAirport().getAirportCodename()%>" />
 						</form>
 
 					</td>
                                             <td>
-                                                <%= fetchDataToList.get(i).getFlightClass() %>
+                                                <%= fetchDataToList.get(i).getFlight().getFlightClass() %>
                                             </td>
                                             <td>
-                                                <%= fetchDataToList.get(i).getDateOfFlight().getTime() %>
+                                                <%= fetchDataToList.get(i).getFlight().getDateOfFlight().getTime() %>
                                             </td>
                                             <td>
-                                                <%= fetchDataToList.get(i).getSeatRow() %>
+                                                <%= fetchDataToList.get(i).getSeat().getSeatRow() %>
                                             </td>
                                             <td>
-                                                <%= fetchDataToList.get(i).getSeatNumber() %>
+                                                <%= fetchDataToList.get(i).getSeat().getSeatNumber() %>
                                             </td>
                                             <td>
-                                                <%= fetchDataToList.get(i).getFlightPrice() %> KM
+                                                <%= fetchDataToList.get(i).getFlight().getFlightPrice() %> KM
                                             </td>
                                             <td>
                                           	    <%= fetchDataToList.get(i).getBuyersName() %>
@@ -401,11 +389,16 @@ String strDate= formatter.format(date);
                                             <td>
                                             <div class="tablefunctions">
                                                 <form id="remove" action="FlightTicketRemoveServlet" method="GET" name="removeid">
-                                                    <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlightId()%>" />
-                                                    <input type="hidden" name="seatRow" value="<%=fetchDataToList.get(i).getSeatRow()%>" />
-                                                    <input type="hidden" name="seatNumber" value="<%=fetchDataToList.get(i).getSeatNumber()%>" />
+                                                    <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getFlight().getFlightId()%>" />
+                                                    <input type="hidden" name="seatRow" value="<%=fetchDataToList.get(i).getSeat().getSeatRow()%>" />
+                                                    <input type="hidden" name="seatNumber" value="<%=fetchDataToList.get(i).getSeat().getSeatNumber()%>" />
                                                     <input type="submit" name="remove" value="Remove" />
 													</form>
+													
+													 <form id="viewFlight" action="FlightTicketPreviewServlet" method="GET" name="viewid">
+                                          			  <input type="hidden" name="product_id" value="<%=fetchDataToList.get(i).getTicketId()%>" /> 
+                                           			 <input type="submit" name="view" value="View" />
+                                       					 </form>
                                                    
                                                         </div>
                                             </td>

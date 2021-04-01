@@ -28,15 +28,14 @@ public class AirlineAddServlet extends HttpServlet {
 
 		HttpSession session = request.getSession(false);
 		try {
-			if (true) {
+			if (session.getAttribute("user") != null ) {
 				createAirline(request, response);
 				
 			}
 
 			else {
-				RequestDispatcher rd = request.getRequestDispatcher("login.html");
-				rd.forward(request, response);
-			}
+				response.sendRedirect("form/login.html");
+				}
 		}
 
 		catch (SQLException e) {
